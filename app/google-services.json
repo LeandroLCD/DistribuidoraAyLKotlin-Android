@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "380923500055",
+    "project_id": "distribuidoraayl-kotlin",
+    "storage_bucket": "distribuidoraayl-kotlin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380923500055:android:5a6e16b46a92de476e6e52",
+        "android_client_info": {
+          "package_name": "com.blipblipcode.distribuidoraayl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXZnly0GExfW3dfgX2hi7XrQqVgZqixBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

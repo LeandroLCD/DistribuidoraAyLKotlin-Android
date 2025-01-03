@@ -1,0 +1,130 @@
+[versions]
+activityCompose = "1.9.3"
+agp = "8.7.3"
+appcompat = "1.7.0"
+kotlin = "2.1.0"
+coreKtx = "1.15.0"
+cameraCamera2 = "1.4.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
+composeBom = "2024.12.01"
+coilCompose = "2.4.0"
+navigationCompose = "2.8.5"
+constraintlayoutCompose = "1.1.0"
+runtimeLivedata = "1.7.6"
+lifecycleProcess = "2.8.7"
+preferenceKtx = "1.2.1"
+retrofit = "2.9.0"
+okhttpBom = "4.12.0"
+room = "2.6.1"
+ksp = "2.0.21-1.0.27"
+guava = "33.3.1-jre"
+googleGmsGoogleServices = "4.4.2"
+googleFirebaseCrashlytics = "3.0.2"
+hilt = "2.54"
+hiltNavigationCompose = "1.2.0"
+kotlinxSerializationJson = "1.6.3"
+googleServices = "21.3.0"
+firebaseBom = "33.7.0"
+googleid = "1.1.1"
+
+[libraries]
+
+#Activities and ViewModel
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleProcess" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+
+#compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+#preferences
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
+
+#UI
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+
+#Navigation
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+
+#Network
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp3-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+
+#hild
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
+#Camera
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCamera2" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
+androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraCamera2" }
+
+#Room
+android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+android-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+#firebase
+firebase-boom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx"}
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore"}
+firebase-crashlytics = {group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-remoteConfig = {group= "com.google.firebase", name = "firebase-config"}
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+
+#playService
+play-service = {module ="com.google.android.gms:play-services-auth", version.ref = "googleServices"}
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+
+#testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+
+[bundles]
+androidx-livedata = ["androidx-appcompat", "androidx-runtime-livedata", "androidx-lifecycle-process"]
+androidx-compose = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-tooling-preview"]
+androidx-uiMaterial = ["androidx-material3", "androidx-icons-core", "androidx-icons-extended", "coil-compose", "constraintlayout-compose"]
+firebase = ["firebase-crashlytics", "guava", "firebase-auth", "firebase-firestore", "firebase-remoteConfig"]
+compose-navigation = ["navigation-compose", "navigation-ui-ktx", "kotlinx-serialization-json"]
+network = ["retrofit", "converter-gson", "okhttp3", "okhttp3-interceptor"]
+room = ["android-room-runtime", "android-room-ktx"]
+hilt = ["androidx-hilt-navigation-compose", "hilt-android"]
+cameraX = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-extensions"]
+play-service = ["googleid", "play-service"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
+
