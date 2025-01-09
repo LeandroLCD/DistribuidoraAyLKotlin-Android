@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">DistribuidoraAyL.Kotlin</string>
+    <string name="sing_in">Iniciar Sesión</string>
+    <string name="forgot_password">¿Olvisaste tu Contraseña?</string>
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="password_is_not_valid">La contraseña debe tener al menos 6 caracteres, una mayuscula, una minuscula y un numero.</string>
+    <string name="email_is_not_valid">El Correo ingresado no es valido</string>
+    <string name="send_email">Enviar Correo</string>
+    <string name="recovery_password">Recuperar Contraseña</string>
 </resources>
