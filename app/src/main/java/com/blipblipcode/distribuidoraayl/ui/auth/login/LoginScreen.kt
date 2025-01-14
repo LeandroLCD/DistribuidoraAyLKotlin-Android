@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,18 +22,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,75 +49,141 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.models.ResultType
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.Screen
 import com.blipblipcode.distribuidoraayl.ui.theme.primaryColor
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.EmailTextField
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.PasswordTextField
+import com.blipblipcode.distribuidoraayl.ui.widgets.input.getString
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.stringException
+import com.blipblipcode.distribuidoraayl.ui.widgets.loading.LoadingScreen
+import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackbar
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
-    Scaffold() { innerPadding ->
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    onCompleteLogin: () -> Unit,
+    navigateTo: (Screen) -> Unit
+) {
+
+
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val sendEmailSnackbar = remember {
+        SnackbarHostState()
+    }
+    val errorException by viewModel.errorException.collectAsState()
+    val errorSnackbar = remember {
+        SnackbarHostState()
+    }
+
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LaunchedEffect(errorException) {
+        errorException?.let { exception ->
+            errorSnackbar.showSnackbar(context.getString(exception))
+        }
+
+    }
+
+    Scaffold(
+        snackbarHost = {
+            NotificationSnackbar(state = errorSnackbar)
+            NotificationSnackbar(state = sendEmailSnackbar)
+        }
+    ) { innerPadding ->
         var recoveryPassword by remember {
             mutableStateOf(false)
         }
-        ConstraintLayout(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        Box {
+            ConstraintLayout(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
 
-            val (cardRefs, iconRefs) = createRefs()
-            val iconLineTop = createGuidelineFromTop(0.15f)
-            val cardLineTop = createGuidelineFromTop(0.2f)
-            val iconLineBottom = createGuidelineFromTop(0.25f)
+                val (cardRefs, iconRefs) = createRefs()
+                val iconLineTop = createGuidelineFromTop(0.15f)
+                val cardLineTop = createGuidelineFromTop(0.2f)
+                val iconLineBottom = createGuidelineFromTop(0.25f)
 
-            Surface(Modifier.constrainAs(cardRefs) {
-                top.linkTo(cardLineTop)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }.padding(horizontal = 16.dp),
-                shadowElevation = 8.dp,
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, primaryColor)
-                ) {
-                AnimatedContent(recoveryPassword, label = "recoveryPassword") {
-                    if (it) {
-
-                        RecoveryPassword(viewModel) {
-                            recoveryPassword = false
+                Surface(
+                    Modifier
+                        .constrainAs(cardRefs) {
+                            top.linkTo(cardLineTop)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
                         }
-                    } else {
-                        Login(viewModel, modifier = Modifier) {
-                            recoveryPassword = true
+                        .padding(horizontal = 16.dp),
+                    shadowElevation = 8.dp,
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, primaryColor)
+                ) {
+                    AnimatedContent(recoveryPassword, label = "recoveryPassword") {
+                        if (it) {
+
+                            RecoveryPassword(viewModel, onSuccess = {
+                                scope.launch {
+                                    sendEmailSnackbar.showSnackbar(context.getString(R.string.email_sent))
+                                }
+                            }) {
+                                recoveryPassword = false
+                            }
+
+                        } else {
+                            Login(
+                                viewModel, modifier = Modifier, navigateTo = {
+                                    navigateTo.invoke(Screen.VerifiedAccount)
+                                }, onCompleteLogin
+                            ) {
+                                recoveryPassword = true
+                            }
                         }
                     }
+
+
                 }
+                Box(Modifier.constrainAs(iconRefs) {
+                    top.linkTo(iconLineTop)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(iconLineBottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
 
-
+                }, contentAlignment = Alignment.Center) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_logo),
+                        modifier = Modifier.fillMaxSize(),
+                        contentDescription = null
+                    )
+                }
             }
-            Box(Modifier.constrainAs(iconRefs) {
-                top.linkTo(iconLineTop)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(iconLineBottom)
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
 
-            }, contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(R.drawable.ic_logo),
-                    modifier = Modifier.fillMaxSize(),
-                    contentDescription = null
-                )
-            }
+
+            LoadingScreen(
+                isLoading = isLoading,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.6f))
+            )
+
+
         }
 
     }
 }
 
 @Composable
-fun Login(viewModel: LoginViewModel, modifier: Modifier.Companion, action: () -> Unit) {
+fun Login(
+    viewModel: LoginViewModel,
+    modifier: Modifier.Companion,
+    navigateTo: () -> Unit,
+    onCompleteLogin: () -> Unit,
+    onRecoveryPassword: () -> Unit
+) {
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     var isVisiblePassword by remember {
@@ -148,7 +220,7 @@ fun Login(viewModel: LoginViewModel, modifier: Modifier.Companion, action: () ->
         )
         Spacer(Modifier.height(16.dp))
 
-        PasswordTextField (
+        PasswordTextField(
             modifier = Modifier.fillMaxWidth(),
             value = password.value,
             onChangedValue = {
@@ -163,7 +235,7 @@ fun Login(viewModel: LoginViewModel, modifier: Modifier.Companion, action: () ->
         )
         TextButton(
             onClick = {
-                action.invoke()
+                onRecoveryPassword.invoke()
             },
             modifier = Modifier.align(Alignment.End)
         ) {
@@ -174,7 +246,11 @@ fun Login(viewModel: LoginViewModel, modifier: Modifier.Companion, action: () ->
         Button(
             enabled = enableLogin,
             onClick = {
-                    viewModel.onLogin(email.value, password.value)
+                viewModel.onLogin(
+                    email.value,
+                    password.value,
+                    onVerifiedEmail = navigateTo,
+                    onCompleteLogin = onCompleteLogin)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = primaryColor,
@@ -196,7 +272,7 @@ fun Login(viewModel: LoginViewModel, modifier: Modifier.Companion, action: () ->
 }
 
 @Composable
-fun RecoveryPassword(viewModel: LoginViewModel, onChangedContent: () -> Unit) {
+fun RecoveryPassword(viewModel: LoginViewModel, onSuccess: ()->Unit, onChangedContent: () -> Unit) {
     val email by viewModel.email.collectAsStateWithLifecycle()
     var isEnabled by remember { mutableStateOf(true) }
     val timer by remember {
@@ -251,6 +327,9 @@ fun RecoveryPassword(viewModel: LoginViewModel, onChangedContent: () -> Unit) {
         Button(
             onClick = {
                 timer.start()
+                viewModel.onForgotPassword(email.value){
+                    onSuccess.invoke()
+                }
             },
             enabled = isEnabled,
             colors = ButtonDefaults.buttonColors(

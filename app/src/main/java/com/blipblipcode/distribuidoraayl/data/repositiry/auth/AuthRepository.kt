@@ -124,16 +124,20 @@ class AuthRepository @Inject constructor(
     override suspend fun reloadAccount(): ResultType<User> {
         return makeCallNetwork {
             suspendCancellableCoroutine { continuation ->
-                firebaseAuth.currentUser!!.reload().addOnSuccessListener {
-                    continuation.resume(firebaseAuth.currentUser!!.toUser())
-                }
-                    .addOnFailureListener { exception ->
-                        continuation.cancel(exception)
+                if(firebaseAuth.currentUser != null){
+                    firebaseAuth.currentUser!!.reload().addOnSuccessListener {
+                        continuation.resume(firebaseAuth.currentUser!!.toUser())
                     }
-                    .addOnCanceledListener {
-                        continuation.cancel()
-                    }
+                        .addOnFailureListener { exception ->
+                            continuation.cancel(exception)
+                        }
+                        .addOnCanceledListener {
+                            continuation.cancel()
+                        }
 
+                }else{
+                    continuation.cancel(UnAuthenticationException())
+                }
             }
 
         }

@@ -4,7 +4,11 @@ import android.content.Context
 import com.blipblipcode.distribuidoraayl.core.utils.isNetworkAvailable
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.throwable.NetworkException
+import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidException
+import com.blipblipcode.distribuidoraayl.domain.throwable.UserDeletedException
+import com.blipblipcode.distribuidoraayl.domain.throwable.UserDisabledException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +38,23 @@ open class BaseRepository(private val dispatcher: CoroutineDispatcher,private va
     private fun <T> handleException(throwable: Throwable): ResultType<T> {
 
         val castException = when(throwable){
-        is FirebaseAuthInvalidCredentialsException -> throwable
+        is FirebaseAuthInvalidCredentialsException -> {
+            if(throwable.errorCode == "ERROR_INVALID_CREDENTIAL"){
+                PasswordIsNotValidException()
+            }else{
+                throwable
+            }
+        }
             is FirebaseAuthUserCollisionException -> throwable
-
+            is FirebaseAuthInvalidUserException -> {
+                if(throwable.errorCode == "ERROR_USER_DISABLED"){
+                    UserDisabledException()
+                }else if (throwable.errorCode == "ERROR_USER_NOT_FOUND"){
+                    UserDeletedException()
+                }else{
+                    throwable
+                }
+            }
             else -> throwable
          }
         return ResultType.Error(castException)

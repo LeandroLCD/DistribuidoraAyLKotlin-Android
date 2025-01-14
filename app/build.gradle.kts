@@ -66,6 +66,7 @@ dependencies {
 
     //ui
     implementation(libs.bundles.androidx.uiMaterial)
+    implementation(libs.lottie.compose)
 
     //network
     implementation(libs.bundles.network)

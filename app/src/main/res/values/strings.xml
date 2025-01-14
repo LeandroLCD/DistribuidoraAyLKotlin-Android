@@ -8,4 +8,14 @@
     <string name="email_is_not_valid">El Correo ingresado no es valido</string>
     <string name="send_email">Enviar Correo</string>
     <string name="recovery_password">Recuperar Contraseña</string>
+    <string name="email_sent">Hemos enviado un correo para restablecer su contraseña.</string>
+    <string name="retry">Ok</string>
+    <string name="ok">Ok</string>
+    <string name="verified_account_msj">Hemos enviado un correo electronico para verificar tu cuenta.</string>
+    <string name="verified_account">Verificar</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="not_authentication">Usuario sin autenticación.</string>
+    <string name="user_disabled">Usuario desabilitado por el Administrador.</string>
+    <string name="network_error">Dispositivo sin conexion a internet.</string>
+    <string name="user_deleted">Usuario eliminado por el administrador.</string>
 </resources>

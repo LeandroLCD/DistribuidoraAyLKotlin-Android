@@ -29,6 +29,7 @@ kotlinxSerializationJson = "1.6.3"
 googleServices = "21.3.0"
 firebaseBom = "33.7.0"
 googleid = "1.1.1"
+lotieVersion = "6.6.2"
 
 [libraries]
 
@@ -56,6 +57,7 @@ androidx-icons-core = { group = "androidx.compose.material", name = "material-ic
 androidx-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+lottie-compose = {module = "com.airbnb.android:lottie-compose", version.ref = "lotieVersion"}
 
 #Navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
