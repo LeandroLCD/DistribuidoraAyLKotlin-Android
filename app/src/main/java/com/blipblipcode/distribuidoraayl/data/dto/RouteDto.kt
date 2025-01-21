@@ -5,6 +5,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
+@Suppress("unused")
 data class RouteDto(
     @get:DocumentId
     var uid: String = "",

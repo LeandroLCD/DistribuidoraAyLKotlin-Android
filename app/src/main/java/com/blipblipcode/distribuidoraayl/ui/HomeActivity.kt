@@ -43,14 +43,14 @@ class HomeActivity : ComponentActivity() {
                             println("No se creo la ruta ${exception.message}")
                         }
 
-                       /* when(result){
+                       when(result){
                             is ResultType.Error -> {
                                 println("Error  ${result.exception.message}")
                             }
                             is ResultType.Success -> {
                                 println("Exito")
                             }
-                        }*/
+                        }
 
                         repository.getRoutes().collect{routes->
                             routes.forEach {

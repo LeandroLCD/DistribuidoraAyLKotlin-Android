@@ -14,9 +14,9 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.cancel
