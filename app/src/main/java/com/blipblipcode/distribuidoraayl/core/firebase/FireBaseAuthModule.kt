@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.core.auth
+package com.blipblipcode.distribuidoraayl.core.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
