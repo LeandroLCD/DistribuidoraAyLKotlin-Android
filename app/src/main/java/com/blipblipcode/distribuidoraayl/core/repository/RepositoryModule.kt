@@ -2,8 +2,12 @@ package com.blipblipcode.distribuidoraayl.core.repository
 
 import com.blipblipcode.distribuidoraayl.data.repositiry.auth.AuthRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.customer.CustomerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.of.OpenFacturaRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.IAuthRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +31,16 @@ class RepositoryModule {
         return customerRepository
     }
 
+    @Singleton
+    @Provides
+    fun provideOpenFacturaRepository(openFacturaRepository: OpenFacturaRepository): IOpenFacturaRepository {
+        return openFacturaRepository
+    }
+
+    @Singleton
+    @Provides
+    fun provideSystemPreferencesRepository(systemPreferencesRepository: SystemPreferencesRepository): ISystemPreferencesRepository {
+        return systemPreferencesRepository
+    }
 
 }

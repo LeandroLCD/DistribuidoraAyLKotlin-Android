@@ -1,10 +1,10 @@
 package com.blipblipcode.distribuidoraayl.data.mapper
 
-import com.blipblipcode.distribuidoraayl.data.dto.ActivityDto
-import com.blipblipcode.distribuidoraayl.data.dto.BranchDto
-import com.blipblipcode.distribuidoraayl.data.dto.CustomerDto
-import com.blipblipcode.distribuidoraayl.data.dto.RouteDto
-import com.blipblipcode.distribuidoraayl.data.dto.RubroDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.ActivityDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.BranchDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.CustomerDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Activity
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Branch
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
@@ -18,7 +18,7 @@ fun Route.toDto(): RouteDto {
         name = name
     )
 }
-fun Customer.toDto(): CustomerDto{
+fun Customer.toDto(): CustomerDto {
     return CustomerDto(
         commune = commune,
         address = address,

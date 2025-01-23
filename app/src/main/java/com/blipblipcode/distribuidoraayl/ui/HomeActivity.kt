@@ -14,50 +14,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
 import com.blipblipcode.distribuidoraayl.ui.theme.DistribuidoraAyLTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
     @Inject
-    lateinit var repository: ICustomerRepository
+    lateinit var repository: IOpenFacturaRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             DistribuidoraAyLTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     LaunchedEffect(Unit){
-                      val result =  repository.createRoute(Route(name = "Ruta 2")).onSuccess {
-                            println("Se creo la ruta")
-                        }.onError { exception ->
-                            println("No se creo la ruta ${exception.message}")
-                        }
-
-                       when(result){
-                            is ResultType.Error -> {
-                                println("Error  ${result.exception.message}")
-                            }
-                            is ResultType.Success -> {
-                                println("Exito")
-                            }
-                        }
-
-                        repository.getRoutes().collect{routes->
-                            routes.forEach {
-                                println("${it.uid} - ${it.name}")
-                            }
-                        }
-
+                      repository.getTaxpayer("10764166-2").onSuccess {
+                          println(it)
+                      }.onError {
+                          println(it)
+                      }
 
                     }
 

@@ -13,6 +13,7 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.auth.IAuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.data.dto
+package com.blipblipcode.distribuidoraayl.data.dto.customer
 
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro

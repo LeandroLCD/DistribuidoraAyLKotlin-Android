@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.androidx.livedata)
 
+    //Preferences
+    implementation(libs.androidx.preference.ktx)
+
     //camera
     implementation(libs.bundles.cameraX)
 

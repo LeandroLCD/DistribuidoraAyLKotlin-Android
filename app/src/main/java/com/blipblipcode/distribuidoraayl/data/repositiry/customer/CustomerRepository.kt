@@ -1,10 +1,9 @@
 package com.blipblipcode.distribuidoraayl.data.repositiry.customer
 
 import android.content.Context
-import com.blipblipcode.distribuidoraayl.R
-import com.blipblipcode.distribuidoraayl.data.dto.CustomerDto
-import com.blipblipcode.distribuidoraayl.data.dto.RouteDto
-import com.blipblipcode.distribuidoraayl.data.dto.RubroDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.CustomerDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.throwable.BackendErrorException
 import com.blipblipcode.distribuidoraayl.domain.throwable.EmailIsNotValidException
 import com.blipblipcode.distribuidoraayl.domain.throwable.NetworkException
 import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidException
@@ -34,6 +35,9 @@ fun Context.getString(e:Throwable?):String{
         is UserDeletedException -> getString(R.string.user_deleted)
         is NetworkException ->{
             this.getString(R.string.network_error)
+        }
+        is BackendErrorException ->{
+            e.message.orEmpty()
         }
         else -> {
             if (e != null) {
