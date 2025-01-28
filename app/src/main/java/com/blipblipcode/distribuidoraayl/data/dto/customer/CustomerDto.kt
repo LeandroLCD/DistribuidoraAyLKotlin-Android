@@ -47,13 +47,10 @@ data class CustomerDto (
     var routeId:String?,
     @set:PropertyName("rutCode")
     @get:PropertyName("rutCode")
-    var rutCode:String,
-    @set:PropertyName("sapCode")
-    @get:PropertyName("sapCode")
-    var sapCode:String?
+    var rutCode:String
 ): Mappable<Customer> {
 
-    constructor() : this( rut="", commune="", regionId="", country="", address="", rubro = RubroDto(), companyName="", branches = listOf(), activities = listOf(), phone="", registrationDate="", birthDate="", routeId="", rutCode="", sapCode="")
+    constructor() : this( rut="", commune="", regionId="", country="", address="", rubro = RubroDto(), companyName="", branches = listOf(), activities = listOf(), phone="", registrationDate="", birthDate="", routeId="", rutCode="")
 
     override fun mapToDomain(): Customer {
         return Customer(
@@ -70,7 +67,6 @@ data class CustomerDto (
             birthDate = birthDate,
             routeId = routeId,
             rutCode = rutCode,
-            sapCode = sapCode,
             rubro = rubro.mapToDomain()
         )
     }

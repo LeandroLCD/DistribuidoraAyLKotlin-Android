@@ -23,11 +23,14 @@ data class BranchDto (
     var phone: String,
     @get:PropertyName("isHouseMatrix")
     @set:PropertyName("isHouseMatrix")
-    var isHouseMatrix:Boolean = false
+    var isHouseMatrix:Boolean = false,
+    @get:PropertyName("sapCode")
+    @set:PropertyName("sapCode")
+    var sapCode: String = ""
 ): Mappable<Branch> {
     constructor() : this(city="", code=0, commune="", address="", phone="", isHouseMatrix = false)
 
     override fun mapToDomain(): Branch {
-        return Branch(city, code, commune, address, phone, isHouseMatrix)
+        return Branch(city, code, commune, address, phone, isHouseMatrix, sapCode)
     }
 }

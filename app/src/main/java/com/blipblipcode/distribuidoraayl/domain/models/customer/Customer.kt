@@ -14,6 +14,22 @@ data class Customer (
     val registrationDate:String,
     val birthDate:String,
     val routeId:String?,
-    val rutCode:String,
-    val sapCode:String?
-)
+    val rutCode:String
+){
+    constructor() : this(
+        rut = "",
+        commune = "",
+        regionId = "",
+        rubro = Rubro(0, "", ""),
+        country = "CL",
+        address = "",
+        companyName = "",
+        branches = null,
+        activities = null,
+        phone = "",
+        registrationDate = "",
+        birthDate = "",
+        routeId = "",
+        rutCode = ""
+    )
+}

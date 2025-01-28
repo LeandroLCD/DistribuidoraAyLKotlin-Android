@@ -1,14 +1,19 @@
 package com.blipblipcode.distribuidoraayl.data.repositiry.customer
 
 import android.content.Context
+import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.data.dto.customer.CustomerDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RegionDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.regions.RegionsDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.rubros.RubrosDto
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Region
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
@@ -17,6 +22,7 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -29,7 +35,7 @@ import javax.inject.Inject
 
 
 class CustomerRepository @Inject constructor(
-    context: Context,
+    private val context: Context,
     private val dispatcher: CoroutineDispatcher,
     private val fireStore: FirebaseFirestore
     ): BaseRepository(dispatcher, context), ICustomerRepository {
@@ -38,7 +44,40 @@ class CustomerRepository @Inject constructor(
             const val CUSTOMER = "customerCatalogue"
             const val ROUTE = "routes"
             const val RUBRO = "rubros"
+            const val REGIONS = "regions"
         }
+    /*Scrips para insertar datos de forma masiva a FireStore*/
+    /*
+    suspend fun setRegions(): ResultType<Unit> {
+        val gsonFactory = Gson()
+        val json = context.resources.openRawResource(R.raw.regions).bufferedReader().use { it.readText() }
+
+        return makeCallNetwork {
+            val ref = fireStore.collection(REGIONS)
+            val batch = fireStore.batch()
+            val regions = gsonFactory.fromJson(json, RegionsDto::class.java)
+            regions.regions.forEach {
+                batch.set(ref.document(it.id), it)
+            }
+            batch.commit().await()
+        }
+    }
+
+    suspend fun setRubros(): ResultType<Unit> {
+        val gsonFactory = Gson()
+        val json = context.resources.openRawResource(R.raw.rubros).bufferedReader().use { it.readText() }
+
+        return makeCallNetwork {
+            val ref = fireStore.collection(RUBRO)
+            val batch = fireStore.batch()
+            val rubros = gsonFactory.fromJson(json, RubrosDto::class.java)
+            rubros.rubros.forEach {
+                batch.set(ref.document(), it)
+            }
+            batch.commit().await()
+        }
+    }
+    */
 
     override fun getRoutes(): Flow<List<Route>> {
         return getDocumentsFlow<RouteDto, Route>(ROUTE).flowOn(dispatcher)
@@ -62,7 +101,7 @@ class CustomerRepository @Inject constructor(
         }
     }
 
-    override suspend fun getCustomers(): Flow<List<Customer>> {
+    override fun getCustomers(): Flow<List<Customer>> {
         return getDocumentsFlow<CustomerDto, Customer>(RUBRO).flowOn(dispatcher)
     }
 
@@ -83,7 +122,11 @@ class CustomerRepository @Inject constructor(
         }
     }
 
-    override suspend fun getRubros(): Flow<List<Rubro>> {
+    override fun getRegions(): Flow<List<Region>> {
+        return getDocumentsFlow<RegionDto, Region>(CUSTOMER).flowOn(dispatcher)
+    }
+
+    override fun getRubros(): Flow<List<Rubro>> {
         return getDocumentsFlow<RubroDto, Rubro>(RUBRO).flowOn(dispatcher)
     }
 

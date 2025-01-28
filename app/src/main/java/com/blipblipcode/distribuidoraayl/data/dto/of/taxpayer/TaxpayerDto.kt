@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.data.dto.of
+package com.blipblipcode.distribuidoraayl.data.dto.of.taxpayer
 
 
 import com.blipblipcode.distribuidoraayl.data.dto.customer.ActivityDto
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 
 data class TaxpayerDto(
     @SerializedName("actividades")
-    val activities: List<ActivityDto>,
+    val activities: List<ActivitiesDto>,
     @SerializedName("comuna")
     val commune: String,
     @SerializedName("direccion")
@@ -21,7 +21,7 @@ data class TaxpayerDto(
     @SerializedName("rut")
     val rut: String,
     @SerializedName("sucursales")
-    val branches: List<BranchDto>,
+    val branches: List<BranchesDto>,
     @SerializedName("telefono")
     val phone: String
 ): Mappable<Taxpayer>{

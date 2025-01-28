@@ -6,5 +6,6 @@ data class Branch(
     val commune: String,
     val address: String,
     val phone: String?,
-    val isHouseMatrix:Boolean = false
+    val isHouseMatrix:Boolean = false,
+    val sapCode: String?
 )

@@ -33,7 +33,6 @@ fun Customer.toDto(): CustomerDto {
         rut = rut,
         rutCode = rutCode,
         routeId = routeId,
-        sapCode = sapCode,
         rubro = rubro.toDto()
     )
 

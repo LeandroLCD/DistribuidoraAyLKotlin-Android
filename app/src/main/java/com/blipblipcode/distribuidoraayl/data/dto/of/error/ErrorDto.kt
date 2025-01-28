@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.domain.models.of.error
+package com.blipblipcode.distribuidoraayl.data.dto.of.error
 
 
 import com.google.gson.annotations.SerializedName

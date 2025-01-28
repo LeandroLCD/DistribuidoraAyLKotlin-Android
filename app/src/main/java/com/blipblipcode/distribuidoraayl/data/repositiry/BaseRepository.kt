@@ -3,7 +3,7 @@ package com.blipblipcode.distribuidoraayl.data.repositiry
 import android.content.Context
 import com.blipblipcode.distribuidoraayl.core.utils.isNetworkAvailable
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
-import com.blipblipcode.distribuidoraayl.domain.models.of.error.ErrorRootDto
+import com.blipblipcode.distribuidoraayl.data.dto.of.error.ErrorRootDto
 import com.blipblipcode.distribuidoraayl.domain.throwable.BackendErrorException
 import com.blipblipcode.distribuidoraayl.domain.throwable.NetworkException
 import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidException
