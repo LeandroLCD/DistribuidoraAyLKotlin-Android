@@ -27,6 +27,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
+import com.blipblipcode.distribuidoraayl.ui.customer.add.AddCustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.customer.add.AddCustomerViewModel
 import com.blipblipcode.distribuidoraayl.ui.theme.DistribuidoraAyLTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,49 +49,11 @@ class HomeActivity : ComponentActivity() {
         setContent {
     val viewModel = hiltViewModel<AddCustomerViewModel>()
             DistribuidoraAyLTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val customer by viewModel.customer.collectAsStateWithLifecycle()
-                    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-                    val errorException by viewModel.errorException.collectAsStateWithLifecycle()
-                        LaunchedEffect(customer.rut){
-                            Log.d("homeActivity", "customer: $customer")
-                        }
-                    LaunchedEffect(errorException){
-                        errorException?.let {
-                            Log.d("homeActivity", "error: $it")
-                        }
-                    }
-                    LaunchedEffect(isLoading){
-                        Log.d("homeActivity", "loading: $isLoading")
-                    }
-                    LaunchedEffect(Unit){
-                      /*repository.getTaxpayer("10764166-2").onSuccess {
-                          println(it)
-                      }.onError {
-                          println(it)
-                      }*/
-                       /* customerRepository.setRegions().onSuccess {
-                            println("Exito")
-                        }.onError {
-                            println(it)
-                        }*/
-
-                       /* customerRepository.setRubros().onSuccess {
-                            println(it)
-                        }.onError {
-                            println(it)
-                        }*/
-
-                    }
-
-                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding).background(Color.Blue)){
-
-                        Greeting(
-                            name = "Android",
-                        )
-                    }
-
+                AddCustomerScreen{
+                    println("onBack")
                 }
+
+
             }
         }
     }

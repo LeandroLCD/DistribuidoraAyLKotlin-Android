@@ -23,7 +23,8 @@ import com.blipblipcode.distribuidoraayl.R
 fun LoadingScreen(isLoading: Boolean, modifier: Modifier = Modifier) {
     AnimatedVisibility(isLoading,
         enter = scaleIn(),
-        exit = scaleOut()
+        exit = scaleOut(),
+        modifier = modifier
     ) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
 

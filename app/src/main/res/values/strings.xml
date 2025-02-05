@@ -18,4 +18,20 @@
     <string name="user_disabled">Usuario desabilitado por el Administrador.</string>
     <string name="network_error">Dispositivo sin conexion a internet.</string>
     <string name="user_deleted">Usuario eliminado por el administrador.</string>
+    <string name="rut">Rut</string>
+    <string name="company_name">Rason Social</string>
+    <string name="birth_day">Fecha de Nacimiento</string>
+    <string name="error_required">Campo requerido.</string>
+    <string name="add_customer">Crear Cliente.</string>
+    <string name="category">Rubros</string>
+    <string name="routes">Rutas</string>
+    <string name="region">Región</string>
+    <string name="commune">Comuna</string>
+    <string name="branches">Sucursales</string>
+    <string name="sac">SAC</string>
+    <string name="is_main_activity">Actividad Principal: %1$s</string>
+    <string name="yes">Si</string>
+    <string name="not">No</string>
+    <string name="activities">Act. Economicas</string>
+    <string name="cancel">Cancel</string>
 </resources>

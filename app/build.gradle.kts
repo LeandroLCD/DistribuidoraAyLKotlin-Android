@@ -70,6 +70,7 @@ dependencies {
     //ui
     implementation(libs.bundles.androidx.uiMaterial)
     implementation(libs.lottie.compose)
+    implementation(libs.form.builder)
 
     //network
     implementation(libs.bundles.network)
