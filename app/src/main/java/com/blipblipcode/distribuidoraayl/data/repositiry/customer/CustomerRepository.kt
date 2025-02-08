@@ -123,7 +123,7 @@ class CustomerRepository @Inject constructor(
     }
 
     override fun getRegions(): Flow<List<Region>> {
-        return getDocumentsFlow<RegionDto, Region>(CUSTOMER).flowOn(dispatcher)
+        return getDocumentsFlow<RegionDto, Region>(REGIONS).flowOn(dispatcher)
     }
 
     override fun getRubros(): Flow<List<Rubro>> {

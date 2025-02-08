@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.blipblipcode.distribuidoraayl" />
-                  <option name="mobileSdkAppId" value="1:380923500055:android:5a6e16b46a92de476e6e52" />
-                  <option name="projectId" value="distribuidoraayl-kotlin" />
-                  <option name="projectNumber" value="380923500055" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -12,6 +12,8 @@ import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidExce
 import com.blipblipcode.distribuidoraayl.domain.throwable.UnAuthenticationException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDeletedException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDisabledException
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 @SuppressLint("ComposableNaming")
 @Composable
@@ -38,6 +40,12 @@ fun Context.getString(e:Throwable?):String{
         }
         is BackendErrorException ->{
             e.message.orEmpty()
+        }
+        is HttpException ->{
+            "${e.code()} ${e.message()}"
+        }
+        is SocketTimeoutException->{
+            this.getString(R.string.network_error)
         }
         else -> {
             if (e != null) {
