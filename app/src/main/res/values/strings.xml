@@ -34,4 +34,5 @@
     <string name="not">No</string>
     <string name="activities">Act. Economicas</string>
     <string name="cancel">Cancel</string>
+    <string name="customer_already_exists">Este cliente ya se encuentra registraado.</string>
 </resources>
