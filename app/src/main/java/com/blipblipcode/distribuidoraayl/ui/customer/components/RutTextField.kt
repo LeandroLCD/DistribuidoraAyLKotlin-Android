@@ -49,3 +49,38 @@ fun RutTextField(
         }
     }
 }
+
+@Composable
+fun RutTextField(
+    rut:String,
+    isReadOnly:Boolean = false,
+    onRutChanged: (String) -> Unit,
+    alignment: Alignment = Alignment.CenterEnd,
+    modifier: Modifier = Modifier,
+    trailingIcon: @Composable (() -> Unit)? = null) {
+
+    BoxWithConstraints(contentAlignment = alignment, modifier = modifier.fillMaxWidth()) {
+        with(LocalDensity.current){
+            OutlinedTextField(
+                modifier = modifier.width(maxWidth.toPx().div(2).toDp()),
+                readOnly = isReadOnly,
+                label = {
+                    Text(text = stringResource(R.string.rut))
+                },
+                value = rut,
+                trailingIcon = {
+                    trailingIcon?.invoke()
+                },
+                onValueChange = {newValue->
+                    onRutChanged.invoke(newValue)
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
+                    disabledBorderColor =  MaterialTheme.colorScheme.onSurface,
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                )
+            )
+        }
+    }
+}

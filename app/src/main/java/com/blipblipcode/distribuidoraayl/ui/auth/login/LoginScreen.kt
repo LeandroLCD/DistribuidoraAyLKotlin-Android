@@ -49,8 +49,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.blipblipcode.distribuidoraayl.R
-import com.blipblipcode.distribuidoraayl.domain.models.ResultType
-import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.Screen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.AuthScreen
 import com.blipblipcode.distribuidoraayl.ui.theme.primaryColor
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.EmailTextField
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.PasswordTextField
@@ -64,7 +63,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     onCompleteLogin: () -> Unit,
-    navigateTo: (Screen) -> Unit
+    navigateTo: (AuthScreen) -> Unit
 ) {
 
 
@@ -135,7 +134,7 @@ fun LoginScreen(
                         } else {
                             Login(
                                 viewModel, modifier = Modifier, navigateTo = {
-                                    navigateTo.invoke(Screen.VerifiedAccount)
+                                    navigateTo.invoke(AuthScreen.VerifiedAccount)
                                 }, onCompleteLogin
                             ) {
                                 recoveryPassword = true

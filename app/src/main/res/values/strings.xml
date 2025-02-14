@@ -35,4 +35,10 @@
     <string name="activities">Act. Economicas</string>
     <string name="cancel">Cancel</string>
     <string name="customer_already_exists">Este cliente ya se encuentra registraado.</string>
+    <string name="edit_customer">Editar Cliente</string>
+    <string name="customer_detail">Información del Cliente</string>
+    <string name="client_list">Lista de Clientes</string>
+    <string name="add_route">Crear Ruta</string>
+    <string name="name">Nombre</string>
+    <string name="accept">Aceptar</string>
 </resources>

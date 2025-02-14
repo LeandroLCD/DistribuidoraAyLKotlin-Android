@@ -102,7 +102,7 @@ class CustomerRepository @Inject constructor(
     }
 
     override fun getCustomers(): Flow<List<Customer>> {
-        return getDocumentsFlow<CustomerDto, Customer>(RUBRO).flowOn(dispatcher)
+        return getDocumentsFlow<CustomerDto, Customer>(CUSTOMER).flowOn(dispatcher)
     }
 
 

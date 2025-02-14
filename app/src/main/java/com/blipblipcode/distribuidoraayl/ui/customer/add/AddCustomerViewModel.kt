@@ -62,7 +62,7 @@ class AddCustomerViewModel @Inject constructor(
 
 
 
-    private val _rut = MutableStateFlow(DataField("13351250-0"))
+    private val _rut = MutableStateFlow(DataField(""))
     val rut = _rut.asStateFlow()
 
     init {

@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.10.0"
-agp = "8.7.3"
+agp = "8.8.0"
 appcompat = "1.7.0"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -32,6 +32,8 @@ googleid = "1.1.1"
 lotieVersion = "6.6.2"
 formBuilder = "1.0.7"
 accompanistPager = "0.35.0-alpha"
+dateTime = "1.1.6"
+threetenabp = "1.4.4"
 
 [libraries]
 
@@ -49,6 +51,10 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+#dateTime
+dateTime = { module = "com.github.LeandroLCD:DateTime", version.ref = "dateTime" }
+threetenabp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp" }
 
 #preferences
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
@@ -123,6 +129,7 @@ room = ["android-room-runtime", "android-room-ktx"]
 hilt = ["androidx-hilt-navigation-compose", "hilt-android"]
 cameraX = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-extensions"]
 play-service = ["googleid", "play-service"]
+dateTime = ["dateTime", "threetenabp"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

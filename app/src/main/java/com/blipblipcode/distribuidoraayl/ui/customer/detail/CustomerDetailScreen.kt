@@ -1,9 +1,9 @@
-package com.blipblipcode.distribuidoraayl.ui.customer.add
+package com.blipblipcode.distribuidoraayl.ui.customer.detail
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
@@ -46,15 +47,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
 import com.blipblipcode.distribuidoraayl.ui.customer.components.AddressTextField
 import com.blipblipcode.distribuidoraayl.ui.customer.components.BirthDateTextField
 import com.blipblipcode.distribuidoraayl.ui.customer.components.CompanyTextField
@@ -77,20 +77,19 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCustomerScreen(
-    viewModel: AddCustomerViewModel = hiltViewModel(),
+fun CustomerDetailScreen(
+    viewModel: CustomerDetailViewModel = hiltViewModel(),
     onBackPressed: () -> Unit
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
     val context = LocalContext.current
-
-    val isLoading by viewModel.isLoading.collectAsState()
-
+    val isLoading by viewModel.isLoading.collectAsState(true)
     val errorException by viewModel.errorException.collectAsState()
 
-    val customer by viewModel.customer.collectAsState()
+    val isEditable by viewModel.isEditable.collectAsState()
+    val customer by viewModel.customer.collectAsState(Customer())
 
     val formsState by remember {
         derivedStateOf {
@@ -131,17 +130,35 @@ fun AddCustomerScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.add_customer),
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
                     navigationIcon = {
                         IconButton(onClick = {
                             onBackPressed.invoke()
                         }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
+                    title = {
+                        AnimatedContent(isEditable) {
+                            if (it) {
+                                Text(
+                                    text = stringResource(R.string.edit_customer),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(R.string.customer_detail),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (!isEditable) {
+                            IconButton(onClick = {
+                                viewModel.onEditCustomer()
+                            }) {
+                                Icon(Icons.Filled.EditNote, contentDescription = null)
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -155,18 +172,20 @@ fun AddCustomerScreen(
                 NotificationSnackbar(snackbarHostState)
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        if (formsState.validate()) {
-                            viewModel.onSavedCustomer(customer) {
-                                onBackPressed.invoke()
+                AnimatedVisibility(isEditable) {
+                    FloatingActionButton(
+                        onClick = {
+                            if (formsState.validate()) {
+                                viewModel.onSavedCustomer(customer) {
+                                    println("Save")
+                                }
                             }
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    shape = CircleShape
-                ) {
-                    Icon(Icons.Filled.Save, contentDescription = null)
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ) {
+                        Icon(Icons.Filled.Save, contentDescription = null)
+                    }
                 }
 
             },
@@ -176,7 +195,7 @@ fun AddCustomerScreen(
             var isOpened by remember {
                 mutableStateOf(false)
             }
-            val rut by viewModel.rut.collectAsState()
+
 
             Column(
                 Modifier
@@ -187,19 +206,20 @@ fun AddCustomerScreen(
             ) {
                 /*rut*/
                 Spacer(modifier = Modifier.width(26.dp))
-                RutTextField(rut, onRutChanged = {
-                    viewModel.onRutChanged(it)
-                },
-                    modifier = Modifier.fillMaxWidth()) {
+                RutTextField(customer.rut, isReadOnly = false, onRutChanged = {}) {
                     IconButton(onClick = {
-                        viewModel.onFindRut(rut.value)
+                        viewModel.syncTaxpayerData(customer.rut)
                     }) {
                         Icon(Icons.Filled.Sync, contentDescription = null)
                     }
                 }
                 Spacer(modifier = Modifier.width(26.dp))
                 /*name*/
-                CompanyTextField(value = customer.companyName) {
+                CompanyTextField(
+                    value = customer.companyName,
+                    isReadOnly = !isEditable,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     viewModel.onNameChanged(it)
                 }
 
@@ -222,8 +242,9 @@ fun AddCustomerScreen(
                         val rubroState = formsState.getState<ChoiceState>("rubro")
                         OptionsSelector(
                             rubroState.value,
+                            isReadOnly = !isEditable,
                             modifier = Modifier.weight(0.6f),
-                            choices = rubros,
+                            choices = rubros.map { FieldChoice(it, it.label()) },
                             isError = rubroState.hasError,
                             errorText = rubroState.errorMessage,
                             label = {
@@ -239,6 +260,7 @@ fun AddCustomerScreen(
                         val routeState = formsState.getState<ChoiceState>("route")
                         OptionsSelector(
                             routesCustomer?.name.orEmpty(),
+                            isReadOnly = !isEditable,
                             modifier = Modifier.weight(0.4f),
                             isError = routeState.hasError,
                             errorText = routeState.errorMessage,
@@ -258,6 +280,7 @@ fun AddCustomerScreen(
                         val birthDate by viewModel.birthDate.collectAsState()
                         BirthDateTextField(
                             birthDate = birthDate,
+                            isReadOnly = !isEditable,
                             onBirthdayChanged = { date ->
                                 viewModel.onBirthdayChanged(date)
                             },
@@ -274,6 +297,7 @@ fun AddCustomerScreen(
 
                         PhoneTextField(
                             value = customer.phone,
+                            isReadOnly = !isEditable,
                             modifier = Modifier.weight(0.4f)
                         ) {
                             viewModel.onPhoneChanged(it)
@@ -296,6 +320,7 @@ fun AddCustomerScreen(
                         val regionState = formsState.getState<ChoiceState>("region")
                         OptionsSelector(
                             regionsCustomer?.name.orEmpty(),
+                            isReadOnly = !isEditable,
                             modifier = Modifier.weight(0.5f),
                             isError = regionState.hasError,
                             errorText = regionState.errorMessage,
@@ -313,6 +338,7 @@ fun AddCustomerScreen(
                         OptionsSelector(
                             customer.commune.removeAccents(),
                             modifier = Modifier.weight(0.5f),
+                            isReadOnly = !isEditable,
                             isError = customerState.hasError,
                             errorText = customerState.errorMessage,
                             choices = communes.map { FieldChoice(it, it.name) },
@@ -326,6 +352,7 @@ fun AddCustomerScreen(
 
                     AddressTextField(
                         value = customer.address,
+                        isReadOnly = !isEditable,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         viewModel.onAddressChanged(it)
@@ -333,8 +360,15 @@ fun AddCustomerScreen(
 
 
                     customer.branches?.let { branches ->
-                        CarouselView(items = branches, label = stringResource(R.string.branches)) {
-                            ItemHolderBranch(it, modifier = Modifier.fillMaxWidth()) { b, c ->
+                        CarouselView(
+                            items = branches,
+                            label = stringResource(R.string.branches)
+                        ) { branch ->
+                            ItemHolderBranch(
+                                branch,
+                                modifier = Modifier.fillMaxWidth(),
+                                isReadOnly = !isEditable
+                            ) { b, c ->
                                 viewModel.onChangedBranch(b, c)
                             }
                         }
@@ -353,7 +387,6 @@ fun AddCustomerScreen(
                 AnimatedVisibility(isOpened) {
                     DatePickerDialog(
                         onDismissRequest = { isOpened = false },
-                        properties = DialogProperties(usePlatformDefaultWidth = true),
                         confirmButton = {
                             Button(
                                 onClick = {
@@ -364,14 +397,14 @@ fun AddCustomerScreen(
 
                                 }
                             ) {
-                                Text(text = stringResource(R.string.ok))
+                                Text(text = "OK")
                             }
                         },
                         dismissButton = {
                             Button(
                                 onClick = { isOpened = false }
                             ) {
-                                Text(text = stringResource(R.string.cancel))
+                                Text(text = "Cancel")
                             }
                         }
                     ) {
@@ -384,7 +417,7 @@ fun AddCustomerScreen(
 
             }
         }
-        LoadingScreen(isLoading, Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)))
+        LoadingScreen(isLoading, Modifier.fillMaxSize())
 
     }
 }

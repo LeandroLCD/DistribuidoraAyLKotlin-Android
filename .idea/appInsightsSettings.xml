@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.blipblipcode.distribuidoraayl" />
+                  <option name="mobileSdkAppId" value="1:33554702688:android:85c155c4918c6599587e05" />
+                  <option name="projectId" value="puntodeventademo-4332d" />
+                  <option name="projectNumber" value="33554702688" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

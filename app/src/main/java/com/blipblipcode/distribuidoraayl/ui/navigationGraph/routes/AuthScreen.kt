@@ -3,13 +3,13 @@ package com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Screen {
+sealed class AuthScreen {
     @Serializable
-    data object Login : Screen()
+    data object Login : AuthScreen()
 
     @Serializable
-    data object Start : Screen()
+    data object Start : AuthScreen()
 
     @Serializable
-    data object VerifiedAccount : Screen()
+    data object VerifiedAccount : AuthScreen()
 }

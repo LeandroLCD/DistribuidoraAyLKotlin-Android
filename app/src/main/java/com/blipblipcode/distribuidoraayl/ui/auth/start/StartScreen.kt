@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.throwable.UnAuthenticationException
-import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.Screen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.AuthScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.getString
 import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackbar
 
@@ -33,7 +33,7 @@ import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackba
 fun StartScreen(
     viewModel: StartViewModel = hiltViewModel(),
     onCompleteLogin: () -> Unit,
-    navigationTo: (Screen) -> Unit
+    navigationTo: (AuthScreen) -> Unit
 ) {
 
     val context = LocalContext.current

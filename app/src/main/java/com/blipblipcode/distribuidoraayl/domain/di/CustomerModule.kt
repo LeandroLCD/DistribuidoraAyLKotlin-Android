@@ -11,7 +11,7 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 internal abstract class CustomerModule {
     @Binds
-    abstract fun bindGetCustomers(useCase: GetCustomerUseCase): IGetCustomerUseCase
+    abstract fun bindGetCustomers(useCase: GetCustomersUseCase): IGetCustomersUseCase
 
     @Binds
     abstract fun bindGetCustomerByRut(useCase: GetCustomerByRutUseCase): IGetCustomerByRutUseCase
@@ -36,5 +36,8 @@ internal abstract class CustomerModule {
 
     @Binds
     abstract fun bindGetRubros(useCase: GetRubrosUseCase): IGetRubrosUseCase
+
+    @Binds
+    abstract fun bindGetCustomerFlow(useCase: GetCustomerFlowUseCase): IGetCustomerFlowUseCase
 
 }

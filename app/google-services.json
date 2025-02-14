@@ -1,26 +1,66 @@
 {
   "project_info": {
-    "project_number": "380923500055",
-    "project_id": "distribuidoraayl-kotlin",
-    "storage_bucket": "distribuidoraayl-kotlin.firebasestorage.app"
+    "project_number": "33554702688",
+    "firebase_url": "https://puntodeventademo-4332d-default-rtdb.firebaseio.com",
+    "project_id": "puntodeventademo-4332d",
+    "storage_bucket": "puntodeventademo-4332d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:380923500055:android:5a6e16b46a92de476e6e52",
+        "mobilesdk_app_id": "1:33554702688:android:85c155c4918c6599587e05",
         "android_client_info": {
           "package_name": "com.blipblipcode.distribuidoraayl"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "33554702688-fssp1e42ra0r3u373ah268j6q4f4do1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAXZnly0GExfW3dfgX2hi7XrQqVgZqixBM"
+          "current_key": "AIzaSyDoKBHDYWlV0zd6CTEMpXrJ0u4K4SlmP1o"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33554702688-fssp1e42ra0r3u373ah268j6q4f4do1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33554702688:android:c950233f0350e937587e05",
+        "android_client_info": {
+          "package_name": "com.blipblipcode.squad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33554702688-fssp1e42ra0r3u373ah268j6q4f4do1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoKBHDYWlV0zd6CTEMpXrJ0u4K4SlmP1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33554702688-fssp1e42ra0r3u373ah268j6q4f4do1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -39,7 +39,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.blipblipcode.distribuidoraayl.R
-import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.Screen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.AuthScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.ButtonRedAyL
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.getString
 import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackbar
@@ -50,7 +50,7 @@ import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackba
 fun AccountScreen(
     viewModel: AccountViewModel = hiltViewModel(),
     loginComplete: () -> Unit,
-    navigateTo: (Screen) -> Unit
+    navigateTo: (AuthScreen) -> Unit
 ) {
     val context = LocalContext.current
     val notificationHost = remember {
@@ -91,7 +91,7 @@ fun AccountScreen(
             actions = {
                 IconButton(onClick = {
                     viewModel.onSignOut()
-                    navigateTo(Screen.Login)
+                    navigateTo(AuthScreen.Login)
                 }) {
                     Icon(Icons.AutoMirrored.Filled.ExitToApp, null)
                 }
