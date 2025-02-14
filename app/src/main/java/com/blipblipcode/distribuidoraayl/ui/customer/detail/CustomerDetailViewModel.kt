@@ -7,7 +7,6 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
 import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICreateOrUpdateCustomerUseCase
-import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetCustomerByRutUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetCustomerFlowUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetRegionsUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetRoutesUseCase

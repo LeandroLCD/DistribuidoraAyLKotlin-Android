@@ -1,13 +1,7 @@
 package com.blipblipcode.distribuidoraayl.ui.customer.add
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blipblipcode.distribuidoraayl.domain.models.customer.Branch
-import com.blipblipcode.distribuidoraayl.domain.models.customer.Commune
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
-import com.blipblipcode.distribuidoraayl.domain.models.customer.Region
-import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
-import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro
 import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.throwable.CustomerAlreadyExistsException

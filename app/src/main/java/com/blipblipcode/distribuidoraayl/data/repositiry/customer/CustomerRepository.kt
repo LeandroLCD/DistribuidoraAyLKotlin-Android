@@ -6,8 +6,6 @@ import com.blipblipcode.distribuidoraayl.data.dto.customer.CustomerDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RegionDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
-import com.blipblipcode.distribuidoraayl.data.dto.customer.regions.RegionsDto
-import com.blipblipcode.distribuidoraayl.data.dto.customer.rubros.RubrosDto
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
@@ -22,7 +20,6 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose

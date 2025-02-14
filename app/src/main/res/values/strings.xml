@@ -9,7 +9,7 @@
     <string name="send_email">Enviar Correo</string>
     <string name="recovery_password">Recuperar Contraseña</string>
     <string name="email_sent">Hemos enviado un correo para restablecer su contraseña.</string>
-    <string name="retry">Ok</string>
+    <string name="retry">Reintentar</string>
     <string name="ok">Ok</string>
     <string name="verified_account_msj">Hemos enviado un correo electronico para verificar tu cuenta.</string>
     <string name="verified_account">Verificar</string>
