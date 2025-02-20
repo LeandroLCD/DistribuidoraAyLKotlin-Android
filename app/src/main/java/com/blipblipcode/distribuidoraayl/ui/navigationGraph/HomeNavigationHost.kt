@@ -10,7 +10,7 @@ import com.blipblipcode.distribuidoraayl.ui.customer.list.CustomerClientsScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 
 @Composable
-fun HomeNavigationHome(navHostController: NavHostController) {
+fun HomeNavigationHost(navHostController: NavHostController) {
     NavHost(navController = navHostController, startDestination = CustomerScreen.List){
         composable<CustomerScreen.List>{
             CustomerClientsScreen {

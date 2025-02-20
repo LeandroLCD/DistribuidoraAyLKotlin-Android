@@ -8,6 +8,7 @@ import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
 import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
+import com.blipblipcode.distribuidoraayl.data.repositiry.BaseFireStoreRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
@@ -34,8 +35,8 @@ import javax.inject.Inject
 class CustomerRepository @Inject constructor(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher,
-    private val fireStore: FirebaseFirestore
-    ): BaseRepository(dispatcher, context), ICustomerRepository {
+    override val fireStore: FirebaseFirestore
+    ): BaseFireStoreRepository(dispatcher, context, fireStore), ICustomerRepository {
 
         companion object{
             const val CUSTOMER = "customerCatalogue"
@@ -125,71 +126,6 @@ class CustomerRepository @Inject constructor(
 
     override fun getRubros(): Flow<List<Rubro>> {
         return getDocumentsFlow<RubroDto, Rubro>(RUBRO).flowOn(dispatcher)
-    }
-
-    private suspend inline fun <reified T> getDocumentDetail(
-        collection: String,
-        documentId: String,
-    ): T? {
-        val documentSnapshot = fireStore.collection(collection)
-            .document(documentId)
-            .get()
-            .await()
-
-        return documentSnapshot?.toObject<T>()
-    }
-
-    private inline fun <reified T, R> getDocumentsFlow(collection: String) where  T : Mappable<R> =
-        callbackFlow {
-            val event = EventListener<QuerySnapshot> { value, error ->
-                if (error != null) {
-                    close(error)
-                    return@EventListener
-                }
-                val items = value?.documents?.mapNotNull {
-                    it.toObject<T>()?.mapToDomain()
-                }
-                if (items != null) {
-                    trySend(items)
-                }
-            }
-
-            val listenerRegistration = fireStore.collection(collection).addSnapshotListener(event)
-
-            awaitClose {
-                listenerRegistration.remove()
-            }
-        }
-
-    private inline fun <reified T, R> getDocumentFlow(
-        collection: String,
-        documentId: String,
-    ): Flow<R>  where  T : Mappable<R> = callbackFlow {
-
-        val event = EventListener<DocumentSnapshot> { value, error ->
-            if (error != null) {
-                close(error)
-                return@EventListener
-            }
-            value?.toObject<T>()?.let {
-                trySend(it.mapToDomain())
-            }
-        }
-
-        val reference = fireStore.collection(collection).document(documentId)
-        val querySnapshot = reference.get().await()
-        if (!querySnapshot.exists()) {
-            // El documento no existe, crea un nuevo documento con el ID de usuario
-            //reference.set(hashMapOf("parametro" to "valor")).await()
-            cancel(cause = CancellationException("Document not found"))
-        }
-
-        val listenerRegistration = reference
-            .addSnapshotListener(event)
-
-        awaitClose {
-            listenerRegistration.remove()
-        }
     }
 
 
