@@ -4,12 +4,14 @@ import android.content.Context
 import com.blipblipcode.distribuidoraayl.data.dto.products.CategoryDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductBrandsDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductDto
+import com.blipblipcode.distribuidoraayl.data.dto.products.UdmDto
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseFireStoreRepository
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.products.ProductBrands
+import com.blipblipcode.distribuidoraayl.domain.models.products.Udm
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,6 +28,7 @@ class ProductsRepository @Inject constructor(
         const val CATALOGUE = "catalogue_products"
         const val CATEGORIES = "categories"
         const val BRANDS = "brands"
+        const val UDM = "udm"
     }
 
     override suspend fun createBrand(brand: ProductBrands): ResultType<Unit> {
@@ -72,5 +75,8 @@ class ProductsRepository @Inject constructor(
         return getDocumentsFlow<ProductBrandsDto, ProductBrands>(BRANDS)
     }
 
+    override fun getUds(): Flow<List<Udm>>{
+        return getDocumentsFlow<UdmDto, Udm>(UDM)
+    }
 
 }

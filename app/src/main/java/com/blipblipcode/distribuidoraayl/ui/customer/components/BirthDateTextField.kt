@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextOverflow
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.ui.auth.login.models.DataField
+import com.blipblipcode.distribuidoraayl.ui.widgets.input.stringException
 
 @Composable
 fun BirthDateTextField(birthDate: DataField<String>, onBirthdayChanged:(String)->Unit,
@@ -29,6 +30,14 @@ fun BirthDateTextField(birthDate: DataField<String>, onBirthdayChanged:(String)-
             disabledBorderColor =  MaterialTheme.colorScheme.onSurface,
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
         ),
+        isError = birthDate.isError,
+        supportingText = {
+            if (birthDate.isError) {
+                Text(
+                    text = stringException(birthDate.errorException),
+                    color = MaterialTheme.colorScheme.error)
+            }
+        },
         onValueChange = { date ->
             onBirthdayChanged(date)
         },

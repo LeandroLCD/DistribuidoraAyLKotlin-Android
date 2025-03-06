@@ -13,6 +13,7 @@ import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidExce
 import com.blipblipcode.distribuidoraayl.domain.throwable.UnAuthenticationException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDeletedException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDisabledException
+import com.blipblipcode.library.throwable.InvalidFormatException
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
@@ -47,6 +48,9 @@ fun Context.getString(e:Throwable?):String{
         }
         is CustomerAlreadyExistsException->{
             this.getString(R.string.customer_already_exists)
+        }
+        is InvalidFormatException->{
+            this.getString(R.string.invalid_format)
         }
         else -> {
             if (e != null) {

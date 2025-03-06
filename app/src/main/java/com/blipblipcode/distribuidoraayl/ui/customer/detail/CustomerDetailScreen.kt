@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -50,6 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
@@ -61,17 +62,16 @@ import com.blipblipcode.distribuidoraayl.ui.customer.components.ItemHolderBranch
 import com.blipblipcode.distribuidoraayl.ui.customer.components.PhoneTextField
 import com.blipblipcode.distribuidoraayl.ui.customer.components.RutTextField
 import com.blipblipcode.distribuidoraayl.ui.utils.removeAccents
-import com.blipblipcode.distribuidoraayl.ui.utils.toFormattedString
 import com.blipblipcode.distribuidoraayl.ui.widgets.carousel.CarouselView
 import com.blipblipcode.distribuidoraayl.ui.widgets.choices.FieldChoice
 import com.blipblipcode.distribuidoraayl.ui.widgets.choices.OptionsSelector
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.getString
 import com.blipblipcode.distribuidoraayl.ui.widgets.loading.LoadingScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackbar
+import com.blipblipcode.library.DateTime
 import com.dsc.form_builder.ChoiceState
 import com.dsc.form_builder.FormState
 import com.dsc.form_builder.Validators
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,7 +100,7 @@ fun CustomerDetailScreen(
                         ),
                     ),
                     ChoiceState(
-                        "rubro", customer.rubro.description, validators = listOf(
+                        "rubro", customer.rubro.label(), validators = listOf(
                             Validators.Required(context.getString(R.string.error_required))
                         )
                     ),
@@ -112,6 +112,21 @@ fun CustomerDetailScreen(
                     ChoiceState(
                         "route", customer.routeId.orEmpty(), validators = listOf(
                             Validators.Required(context.getString(R.string.error_required))
+                        )
+                    ),
+                    ChoiceState(
+                        name = "date",
+                        customer.birthDate,
+                        validators = listOf(
+                            Validators.Required(context.getString(R.string.error_required)),
+                            Validators.Custom(context.getString(R.string.error_required)){ value->
+                                try{
+                                    DateTime.fromString(value.toString())
+                                    true
+                                }catch (e:Throwable){
+                                 false
+                                }
+                            }
                         )
                     )
                 )
@@ -175,7 +190,7 @@ fun CustomerDetailScreen(
                         onClick = {
                             if (formsState.validate()) {
                                 viewModel.onSavedCustomer(customer) {
-                                    println("Save")
+                                    onBackPressed.invoke()
                                 }
                             }
                         },
@@ -203,30 +218,34 @@ fun CustomerDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 /*rut*/
-                Spacer(modifier = Modifier.width(26.dp))
-                RutTextField(customer.rut, isReadOnly = false, onRutChanged = {}) {
-                    IconButton(onClick = {
-                        viewModel.syncTaxpayerData(customer.rut)
-                    }) {
-                        Icon(Icons.Filled.Sync, contentDescription = null)
+
+                RutTextField(customer.rut, isReadOnly = true, onRutChanged = {}) {
+                    if (isEditable){
+                        IconButton(onClick = {
+                            viewModel.syncTaxpayerData(customer.rut)
+                        }) {
+                            Icon(Icons.Filled.Sync, contentDescription = null)
+                        }
                     }
-                }
-                Spacer(modifier = Modifier.width(26.dp))
-                /*name*/
-                CompanyTextField(
-                    value = customer.companyName,
-                    isReadOnly = !isEditable,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    viewModel.onNameChanged(it)
                 }
 
 
                 val scrollState = rememberScrollState()
-                Column(Modifier.verticalScroll(scrollState)) {
-                    val rubros by viewModel.rubros.collectAsState(initial = listOf())
+                val rubros by viewModel.rubros.collectAsState(initial = listOf())
+                val routes by viewModel.routes.collectAsState(initial = listOf())
 
-                    val routes by viewModel.routes.collectAsState(initial = listOf())
+                Column(Modifier.verticalScroll(scrollState)) {
+
+                    /*name*/
+                    CompanyTextField(
+                        value = customer.companyName,
+                        isReadOnly = !isEditable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        viewModel.onNameChanged(it)
+                    }
+
+                    Spacer(Modifier.height(16.dp))
 
                     val routesCustomer by remember {
                         derivedStateOf {
@@ -239,7 +258,7 @@ fun CustomerDetailScreen(
                     ) {
                         val rubroState = formsState.getState<ChoiceState>("rubro")
                         OptionsSelector(
-                            rubroState.value,
+                            rubroState.initial,
                             isReadOnly = !isEditable,
                             modifier = Modifier.weight(0.6f),
                             choices = rubros.map { FieldChoice(it, it.label()) },
@@ -271,16 +290,22 @@ fun CustomerDetailScreen(
                         }
 
                     }
+
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         val birthDate by viewModel.birthDate.collectAsState()
+                        val dateFormsState = formsState.getState<ChoiceState>("date")
+                        LaunchedEffect(birthDate) {
+                            dateFormsState.change(birthDate.value)
+                        }
                         BirthDateTextField(
                             birthDate = birthDate,
                             isReadOnly = !isEditable,
                             onBirthdayChanged = { date ->
                                 viewModel.onBirthdayChanged(date)
+
                             },
                             modifier = Modifier.weight(0.6f)
                         ) {
@@ -303,7 +328,7 @@ fun CustomerDetailScreen(
 
                     }
 
-
+                    Spacer(Modifier.height(16.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -355,7 +380,7 @@ fun CustomerDetailScreen(
                     ) {
                         viewModel.onAddressChanged(it)
                     }
-
+                    Spacer(Modifier.height(8.dp))
 
                     customer.branches?.let { branches ->
                         CarouselView(
@@ -390,7 +415,7 @@ fun CustomerDetailScreen(
                                 onClick = {
                                     isOpened = false
                                     statePicker.selectedDateMillis?.let {
-                                        viewModel.onBirthdayChanged(Date(it).toFormattedString())
+                                        viewModel.onBirthdayChanged(it)
                                     }
 
                                 }
@@ -404,10 +429,12 @@ fun CustomerDetailScreen(
                             ) {
                                 Text(text = "Cancel")
                             }
-                        }
+                        },
+                        properties = DialogProperties(usePlatformDefaultWidth = true)
                     ) {
                         DatePicker(
                             state = statePicker,
+                            title = null,
                             showModeToggle = true
                         )
                     }

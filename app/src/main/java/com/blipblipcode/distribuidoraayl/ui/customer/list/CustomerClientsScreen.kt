@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -74,7 +75,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CustomerClientsScreen(
     viewModel: CustomerListViewModel = hiltViewModel(),
-    onNavigateTo:(CustomerScreen)->Unit) {
+    onNavigateTo: (CustomerScreen) -> Unit
+) {
     val customers by viewModel.customers.collectAsState()
     var isVisible by remember {
         mutableStateOf(false)
@@ -122,11 +124,13 @@ fun CustomerClientsScreen(
                 }
             }
             items(customers, key = { it.rut }) {
-                ItemHolder(it, onEdit = {customer->
+                ItemHolder(it,
+                    modifier = Modifier.height(76.dp),
+                    onEdit = { customer ->
                     onNavigateTo.invoke(CustomerScreen.Detail(customer.rut, true))
-                }, onDelete = {customer->
+                }, onDelete = { customer ->
                     viewModel.onDeleteCustomer(customer)
-                }) {customer->
+                }) { customer ->
                     onNavigateTo.invoke(CustomerScreen.Detail(customer.rut))
                 }
             }
@@ -248,13 +252,14 @@ fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
 @Composable
 fun ItemHolder(
     customer: Customer,
+    modifier: Modifier = Modifier,
     onEdit: (Customer) -> Unit,
     onDelete: (Customer) -> Unit,
     onSelected: (Customer) -> Unit
 ) {
     val state = rememberSwipeMenuState()
     val scope = rememberCoroutineScope()
-    SwipeMenuItem(state, contentMenu = {
+    SwipeMenuItem(state, modifier.fillMaxWidth(), contentMenu = {
         Row {
             IconButton(
                 colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Blue),
@@ -289,7 +294,6 @@ fun ItemHolder(
             tonalElevation = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
         ) {
             Row(
                 Modifier
@@ -298,9 +302,17 @@ fun ItemHolder(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(text = customer.companyName, fontSize = 22.sp)
-                    Text(text = customer.rut, fontSize = 22.sp)
-                    Text(text = customer.phone, fontSize = 22.sp)
+                    Text(text = customer.companyName, fontSize = 16.sp, maxLines = 1)
+                    Row(
+                        Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Rut: ${customer.rut}", fontSize = 12.sp)
+                        if(customer.phone.length > 7){
+                            Text(text = "Tlf: ${customer.phone}", fontSize = 12.sp)
+                        }
+                    }
                 }
             }
         }

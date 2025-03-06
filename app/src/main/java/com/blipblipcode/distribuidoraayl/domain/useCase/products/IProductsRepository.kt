@@ -4,6 +4,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.products.ProductBrands
+import com.blipblipcode.distribuidoraayl.domain.models.products.Udm
 import kotlinx.coroutines.flow.Flow
 
 interface IProductsRepository {
@@ -23,4 +24,6 @@ interface IProductsRepository {
     fun getCategoryList(): Flow<List<Category>>
 
     fun getProductBrandsList(): Flow<List<ProductBrands>>
+
+    fun getUds(): Flow<List<Udm>>
 }

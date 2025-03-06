@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryColor,
-    surface = Color.White,
-    onSurface = Color.Black,
-    background = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
+    background = Color.Black,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -39,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 fun DistribuidoraAyLTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

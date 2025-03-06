@@ -5,6 +5,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
+@Suppress("unused")
 data class CategoryDto(
     @DocumentId
     var uid:String,

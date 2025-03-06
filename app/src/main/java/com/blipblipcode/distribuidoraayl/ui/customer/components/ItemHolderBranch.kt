@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Branch
 
@@ -52,7 +53,7 @@ fun ItemHolderBranch(
                 onValueChange = {
                     onChanged(branch, it)
                 },
-                label = { Text(text = stringResource(R.string.sac)) }
+                label = { Text(text = stringResource(R.string.sac), fontSize = 12.sp) }
             )
             Column(
                 Modifier

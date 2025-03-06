@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 
 @Composable
-fun <T> OptionsSelector(
+inline fun  <T> OptionsSelector(
     initial:String,
     modifier: Modifier = Modifier,
     isReadOnly:Boolean = false,
@@ -53,11 +53,18 @@ fun <T> OptionsSelector(
         disabledTextColor = MaterialTheme.colorScheme.onSurface
     ),
     choices:List<FieldChoice<T>>,
-    label: @Composable ()->Unit,
-    onValueChange: (FieldChoice<T>) -> Unit
+    crossinline label: @Composable ()->Unit,
+    crossinline onValueChange: (FieldChoice<T>) -> Unit
 ) {
     var selected by remember{
         mutableStateOf<FieldChoice<T>?>(null)
+    }
+
+    LaunchedEffect(initial, choices) {
+        if(initial.isNotBlank()){
+            selected = choices.find { it.display == initial }
+            selected?.let(onValueChange)
+        }
     }
 
     var expander by remember {

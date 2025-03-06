@@ -3,7 +3,7 @@ package com.blipblipcode.distribuidoraayl.data.dto.products
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
 import com.blipblipcode.distribuidoraayl.domain.models.products.Offer
 import com.google.firebase.firestore.PropertyName
-
+@Suppress("unused")
 data class OfferDto(
     @get:PropertyName("percentage")
     @set:PropertyName("percentage")

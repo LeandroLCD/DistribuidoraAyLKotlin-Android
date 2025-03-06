@@ -6,7 +6,7 @@ data class Product(
     val brandId: String,
     val description: String,
     val sku: Int,
-    val udm: String,
+    val udm: Udm,
     val barCode: String,
     val name: String,
     val netPrice: Double,

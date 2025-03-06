@@ -9,6 +9,9 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Region
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro
 import com.blipblipcode.distribuidoraayl.ui.auth.login.models.DataField
+import com.blipblipcode.library.DateTime
+import com.blipblipcode.library.model.FormatType
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +37,8 @@ open class CustomerBaseViewModel(loadingIni:Boolean = false,
         get() = mCustomer.asStateFlow()
 
     internal val mBirthDate = MutableStateFlow(DataField(""))
-    internal val mBirthDateTime = MutableStateFlow(DataField(""))
-    val birthDate = merge(mBirthDate.asStateFlow(), mBirthDateTime.asStateFlow()).stateIn(
+
+    val birthDate = mBirthDate.asStateFlow().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(2000),
         DataField("")
@@ -64,10 +67,39 @@ open class CustomerBaseViewModel(loadingIni:Boolean = false,
     }
 
     fun onBirthdayChanged(date: String) {
-        mBirthDate.update { old ->
-            old.copy(value = date)
-        }
+            try{
 
+                val value = DateTime.fromString(date).format(FormatType.Short('/'))
+                mBirthDate.update { old ->
+                    old.copy(
+                        value = value,
+                        isError = false,
+                        errorException = null
+                    )
+                }
+                mCustomer.update {
+                    it.copy(birthDate = date)
+                }
+            }catch (e:Throwable){
+                e.printStackTrace()
+                mBirthDate.update { old ->
+                    old.copy(
+                        value = date,
+                        isError = true,
+                        errorException = e
+                    )
+                }
+            }
+
+    }
+    fun onBirthdayChanged(date: Long) {
+        val value = DateTime.fromMillis(date).format(FormatType.Short('-'))
+        mBirthDate.update { old ->
+            old.copy(value = value)
+        }
+        mCustomer.update {
+            it.copy(birthDate = value)
+        }
     }
 
     fun onRegionChanged(region: Region) {

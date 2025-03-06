@@ -38,20 +38,6 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LaunchedEffect(Unit) {
-                repeat(5){ count ->
-                    productsRepository.createCategory(Category(name = "Category $count")).onSuccess {
-                        Log.d("productsRepository", "Category created successfully $count")
-                    }.onError {
-                        Log.d("productsRepository", "Category created error $count, ${it.message}")
-                    }
-                }
-
-
-                productsRepository.getCategoryList().collect{
-                    Log.d("productsRepository", "Category: $it")
-                }
-            }
             val navHostController = rememberNavController()
             DistribuidoraAyLTheme {
                 HomeNavigationHost(navHostController)

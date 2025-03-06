@@ -22,7 +22,7 @@ data class ProductDto(
     var sku: Int,
     @get:PropertyName("udm")
     @set:PropertyName("udm")
-    var udm: String,
+    var udm: ProductUdmDto,
     @get:PropertyName("barCode")
     @set:PropertyName("barCode")
     var barCode: String,
@@ -36,7 +36,7 @@ data class ProductDto(
     @set:PropertyName("offer")
     var offer: OfferDto
 ): Mappable<Product> {
-    constructor(): this("", null, "", "", 0, "", "", "", 0.0, OfferDto(0.0, false))
+    constructor(): this("", null, "", "", 0, ProductUdmDto(), "", "", 0.0, OfferDto(0.0, false))
 
     override fun mapToDomain(): Product {
         return Product(
@@ -45,7 +45,7 @@ data class ProductDto(
             brandId = brandId,
             description = description,
             sku = sku,
-            udm = udm,
+            udm = udm.mapToDomain(),
             barCode = barCode,
             name = name,
             netPrice = netPrice,

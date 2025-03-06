@@ -20,9 +20,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -57,24 +61,33 @@ class CustomerDetailViewModel @Inject constructor(
     val isEditable = _isEditable.asStateFlow()
 
     private val customerFireStore = getCustomerFlowUseCase.get().invoke(detail.rut)
-        .onEach {
+        .onEach {customer->
+            mBirthDate.update { old ->
+                old.copy(
+                    value = customer.birthDate,
+                    isError = false,
+                    errorException = null
+                )
+            }
+            mCustomer.update {
+                customer
+            }
             misLoading.tryEmit(false)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), Customer())
 
 
-    override val customer = combineCustomer(customerFireStore, mCustomer)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), Customer())
-
-
-    private fun combineCustomer(customerF: Flow<Customer>, customer: Flow<Customer>): Flow<Customer> {
-        return if(isEditable.value){
-            customer
-        }else{
-            mCustomer.tryEmit(customerFireStore.value)
-            customerF
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val customer: StateFlow<Customer> = isEditable
+    .flatMapLatest { editable ->
+        if (editable) {
+            mCustomer
+        } else{
+            customerFireStore
         }
     }
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), Customer())
+
 
     fun syncTaxpayerData(rut: String) {
         misLoading.update {

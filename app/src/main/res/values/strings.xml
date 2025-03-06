@@ -41,4 +41,12 @@
     <string name="add_route">Crear Ruta</string>
     <string name="name">Nombre</string>
     <string name="accept">Aceptar</string>
+    <string name="phone">phone</string>
+    <string name="address">Dirección</string>
+    <string name="invalid_format">Formato invalido.</string>
+    <string name="barcode">Código de Barras</string>
+    <string name="sku">SKU</string>
+    <string name="product_name">Nombre del producto</string>
+    <string name="udm">UDM</string>
+    <string name="categories">Categoria</string>
 </resources>

@@ -32,7 +32,7 @@ googleid = "1.1.1"
 lotieVersion = "6.6.2"
 formBuilder = "1.0.7"
 accompanistPager = "0.35.0-alpha"
-dateTime = "1.1.6"
+dateTime = "1.1.7"
 threetenabp = "1.4.4"
 
 [libraries]
