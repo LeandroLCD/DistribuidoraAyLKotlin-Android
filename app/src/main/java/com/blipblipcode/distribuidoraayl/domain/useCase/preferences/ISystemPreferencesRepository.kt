@@ -1,6 +1,6 @@
 package com.blipblipcode.distribuidoraayl.domain.useCase.preferences
 
-import com.blipblipcode.distribuidoraayl.domain.models.ECommerce
+import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.CredentialOf
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,6 @@
 package com.blipblipcode.distribuidoraayl.domain.useCase.preferences.impl
 
-import com.blipblipcode.distribuidoraayl.domain.models.ECommerce
+import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.IGetEcommerceUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
 import kotlinx.coroutines.flow.Flow

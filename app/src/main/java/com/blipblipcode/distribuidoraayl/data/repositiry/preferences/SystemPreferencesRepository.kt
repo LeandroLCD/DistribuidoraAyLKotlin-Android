@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.blipblipcode.distribuidoraayl.data.dto.ecommerce.ECommerceDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.CredentialOfDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
-import com.blipblipcode.distribuidoraayl.domain.models.ECommerce
+import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.CredentialOf
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
@@ -16,7 +16,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine

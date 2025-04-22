@@ -1,8 +1,7 @@
-package com.blipblipcode.distribuidoraayl.domain.models
+package com.blipblipcode.distribuidoraayl.domain.models.preferences
 
 data class ECommerce(
     val economicActivity: String,
-    val apiKey: String, 
     val siiOfficeCode: Long,
     val communeOrigin: String,
     val issuerEmail: String,
