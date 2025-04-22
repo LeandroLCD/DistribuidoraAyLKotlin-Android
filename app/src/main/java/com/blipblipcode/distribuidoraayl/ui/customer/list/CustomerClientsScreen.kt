@@ -1,10 +1,7 @@
 package com.blipblipcode.distribuidoraayl.ui.customer.list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -18,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -58,10 +54,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
-import com.blipblipcode.distribuidoraayl.ui.customer.models.DataFilter
-import com.blipblipcode.distribuidoraayl.ui.customer.models.TypeFilter
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.ButtonRedAyL
+import com.blipblipcode.distribuidoraayl.ui.widgets.input.ItemFilter
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.SwipeMenuItem
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.rememberSwipeMenuState
 import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.CustomerClientTopBar
@@ -116,15 +111,14 @@ fun CustomerClientsScreen(
             stickyHeader {
                 FlowRow(maxLines = 2) {
                     filters.forEach {
-                        ItemFilter(it) {
-                            /*Todo Delete filter*/
+                        ItemFilter(it){ f->
+                            viewModel.onDeleteFilter(f)
                         }
                     }
-
                 }
             }
             items(customers, key = { it.rut }) {
-                ItemHolder(it,
+                ItemCustomerHolder(it,
                     modifier = Modifier.height(76.dp),
                     onEdit = { customer ->
                     onNavigateTo.invoke(CustomerScreen.Detail(customer.rut, true))
@@ -191,66 +185,7 @@ fun CustomerClientsScreen(
 }
 
 @Composable
-fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
-    val transition = updateTransition(dataFilter.type, label = "updateTransition")
-    val color = transition.animateColor(label = "color") {
-        when (it) {
-            TypeFilter.Boolean.Equals -> {
-                Color.Green
-            }
-
-            TypeFilter.Date.Between, TypeFilter.Date.Equals, TypeFilter.Date.GreaterThan, TypeFilter.Date.LessThan -> {
-                Color.Blue
-            }
-
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
-                Color.Yellow
-            }
-
-            TypeFilter.Text.Equals, TypeFilter.Text.Contains -> {
-                Color.Red
-            }
-        }
-    }
-    val contentColor = transition.animateColor(label = "color") {
-        when (it) {
-            TypeFilter.Boolean.Equals -> {
-                Color.White
-            }
-
-            TypeFilter.Date.Between, TypeFilter.Date.Equals, TypeFilter.Date.GreaterThan, TypeFilter.Date.LessThan -> {
-                Color.Black
-            }
-
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
-                Color.Black
-            }
-
-            TypeFilter.Text.Equals, TypeFilter.Text.Contains -> {
-                Color.White
-            }
-        }
-    }
-    Surface(
-        color = color.value,
-        contentColor = contentColor.value,
-        onClick = {
-            onDelete.invoke(dataFilter)
-        },
-        tonalElevation = 8.dp,
-        shape = CircleShape
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp, 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(dataFilter.toString(), fontSize = 12.sp)
-        }
-    }
-}
-
-@Composable
-fun ItemHolder(
+fun ItemCustomerHolder(
     customer: Customer,
     modifier: Modifier = Modifier,
     onEdit: (Customer) -> Unit,

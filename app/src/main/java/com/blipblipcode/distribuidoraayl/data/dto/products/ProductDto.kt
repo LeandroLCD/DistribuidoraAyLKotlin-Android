@@ -1,6 +1,8 @@
 package com.blipblipcode.distribuidoraayl.data.dto.products
 
+import com.blipblipcode.distribuidoraayl.core.local.entities.product.ProductEntity
 import com.blipblipcode.distribuidoraayl.data.mapper.Mappable
+import com.blipblipcode.distribuidoraayl.data.mapper.ToEntity
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
@@ -19,7 +21,7 @@ data class ProductDto(
     var description: String,
     @get:PropertyName("sku")
     @set:PropertyName("sku")
-    var sku: Int,
+    var sku: String,
     @get:PropertyName("udm")
     @set:PropertyName("udm")
     var udm: ProductUdmDto,
@@ -31,12 +33,12 @@ data class ProductDto(
     var name: String,
     @get:PropertyName("netPrice")
     @set:PropertyName("netPrice")
-    var netPrice: Double,
+    var grossPrice: Double,
     @get:PropertyName("offer")
     @set:PropertyName("offer")
     var offer: OfferDto
-): Mappable<Product> {
-    constructor(): this("", null, "", "", 0, ProductUdmDto(), "", "", 0.0, OfferDto(0.0, false))
+): Mappable<Product>, ToEntity<ProductEntity> {
+    constructor(): this("", null, "", "", "", ProductUdmDto(), "", "", 0.0, OfferDto(0.0, false))
 
     override fun mapToDomain(): Product {
         return Product(
@@ -48,8 +50,23 @@ data class ProductDto(
             udm = udm.mapToDomain(),
             barCode = barCode,
             name = name,
-            netPrice = netPrice,
+            grossPrice = grossPrice,
             offer = offer.mapToDomain()
+        )
+    }
+
+    override fun mapToEntity(): ProductEntity {
+        return ProductEntity(
+            uid = uid,
+            category = category?.mapToEntity(),
+            brandId = brandId,
+            description = description,
+            sku = sku,
+            udm = udm.mapToEntity(),
+            barCode = barCode,
+            name = name,
+            grossPrice = grossPrice,
+            offer = offer.mapToEntity()
         )
     }
 }

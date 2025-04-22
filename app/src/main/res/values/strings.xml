@@ -22,7 +22,7 @@
     <string name="company_name">Rason Social</string>
     <string name="birth_day">Fecha de Nacimiento</string>
     <string name="error_required">Campo requerido.</string>
-    <string name="add_customer">Crear Cliente.</string>
+    <string name="add_customer">Agregar Cliente.</string>
     <string name="category">Rubros</string>
     <string name="routes">Rutas</string>
     <string name="region">Región</string>
@@ -49,4 +49,16 @@
     <string name="product_name">Nombre del producto</string>
     <string name="udm">UDM</string>
     <string name="categories">Categoria</string>
+    <string name="description">Descripción</string>
+    <string name="brand">Marca</string>
+    <string name="offert">Oferta</string>
+    <string name="gross_price">Precio Bruto</string>
+    <string name="required_field">Campo Requerido.</string>
+    <string name="net_price">Precio Neto</string>
+    <string name="total">Total</string>
+    <string name="add_product">Agregar Producto.</string>
+    <string name="barcode_or_sku_already_exists">Código asociado a otro producto.</string>
+    <string name="add_category">Agregar Categoria</string>
+    <string name="offer_percentage">Oferta: %1$.1f %%</string>
+    <string name="product_list">Lista de Productos.</string>
 </resources>

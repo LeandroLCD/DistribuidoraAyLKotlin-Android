@@ -15,6 +15,6 @@ data class CategoryDto(
 ): Mappable<Category> {
     constructor(): this( "", "")
     override fun mapToDomain(): Category {
-        return Category(uid, name)
+        return Category(uid = uid, name = name)
     }
 }

@@ -6,10 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.throwable.BackendErrorException
+import com.blipblipcode.distribuidoraayl.domain.throwable.BarcodeOrSkuAlreadyExistsException
 import com.blipblipcode.distribuidoraayl.domain.throwable.CustomerAlreadyExistsException
 import com.blipblipcode.distribuidoraayl.domain.throwable.EmailIsNotValidException
 import com.blipblipcode.distribuidoraayl.domain.throwable.NetworkException
 import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidException
+import com.blipblipcode.distribuidoraayl.domain.throwable.RequiredFieldException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UnAuthenticationException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDeletedException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDisabledException
@@ -49,8 +51,14 @@ fun Context.getString(e:Throwable?):String{
         is CustomerAlreadyExistsException->{
             this.getString(R.string.customer_already_exists)
         }
-        is InvalidFormatException->{
+        is InvalidFormatException ->{
             this.getString(R.string.invalid_format)
+        }
+        is RequiredFieldException ->{
+            this.getString(R.string.required_field)
+        }
+        is BarcodeOrSkuAlreadyExistsException ->{
+            this.getString(R.string.barcode_or_sku_already_exists)
         }
         else -> {
             if (e != null) {

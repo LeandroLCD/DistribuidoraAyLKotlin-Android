@@ -15,6 +15,6 @@ data class ProductBrandsDto(
     constructor() : this("", "")
 
     override fun mapToDomain(): ProductBrands {
-        return ProductBrands(uid, name)
+        return ProductBrands(uid = uid, name = name)
     }
 }

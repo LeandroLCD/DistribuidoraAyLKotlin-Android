@@ -22,10 +22,9 @@ class RetrofitModule {
     fun providerRetrofit( apiClient: OkHttpClient,
                           preferences: ISystemPreferencesRepository
     ): Retrofit {
-        val credential = preferences.getCredentialOf()
 
         return Retrofit.Builder()
-            .baseUrl(credential?.url ?: "https://api.haulmer.com/v2/dte/")
+            .baseUrl("https://api.haulmer.com/v2/dte/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(apiClient)
             .build()

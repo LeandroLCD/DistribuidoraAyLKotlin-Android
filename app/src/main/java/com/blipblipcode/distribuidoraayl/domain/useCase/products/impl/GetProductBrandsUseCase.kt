@@ -9,6 +9,6 @@ import javax.inject.Inject
 internal class GetProductBrandsUseCase @Inject constructor(private val repository: IProductsRepository):
     IGetProductBrandsUseCase {
     override fun invoke(): Flow<List<ProductBrands>> {
-        TODO("Not yet implemented")
+        return repository.getProductBrandsList()
     }
 }

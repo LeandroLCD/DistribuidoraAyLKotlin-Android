@@ -19,11 +19,19 @@ interface IProductsRepository {
 
     suspend fun deleteProduct(product: Product): ResultType<Unit>
 
-    fun getProducts(uid: String): Flow<Product>
+    fun getProduct(uid: String): Flow<Product>
+
+    suspend fun getProductByBarcode(barcode: String): ResultType<Product>
+
+    suspend fun getProductBySku(sku: String): ResultType<Product>
+
+    fun getProducts(): Flow<List<Product>>
 
     fun getCategoryList(): Flow<List<Category>>
 
     fun getProductBrandsList(): Flow<List<ProductBrands>>
 
     fun getUds(): Flow<List<Udm>>
+
+    suspend fun getProductByUid(uid: String): ResultType<Product>
 }

@@ -3,6 +3,7 @@ package com.blipblipcode.distribuidoraayl.ui.widgets.choices
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -26,13 +26,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,7 +52,9 @@ inline fun  <T> OptionsSelector(
         focusedBorderColor = MaterialTheme.colorScheme.primary,
         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
         disabledBorderColor = MaterialTheme.colorScheme.onSurface,
-        disabledTextColor = MaterialTheme.colorScheme.onSurface
+        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+        focusedSuffixColor = Color.Blue,
+        errorSupportingTextColor = Color.Blue
     ),
     choices:List<FieldChoice<T>>,
     crossinline label: @Composable ()->Unit,
@@ -64,6 +68,8 @@ inline fun  <T> OptionsSelector(
         if(initial.isNotBlank()){
             selected = choices.find { it.display == initial }
             selected?.let(onValueChange)
+        }else{
+            selected = null
         }
     }
 
@@ -110,45 +116,52 @@ inline fun  <T> OptionsSelector(
             enabled = !isReadOnly,
             onValueChange = { },
             readOnly = true,
-            isError = isError,
+            isError = isError && !isReadOnly,
             supportingText = {
-                if(errorText != null){
+                if(errorText != null && !isReadOnly){
                     Text(errorText, color = MaterialTheme.colorScheme.error)
                 }
             }
         )
         with(LocalDensity.current){
-            DropdownMenu(
-                expanded = expander,
-                modifier = Modifier
-                    .width(rowSize.width.toDp())
-                    .heightIn(max = 250.dp)
-                    .background(colors.focusedContainerColor),
-                onDismissRequest = { expander = false }) {
-                choices.forEach { op ->
-                    DropdownMenuItem(
-                        colors = MenuDefaults.itemColors(
-                            textColor =
-                            if (op == selected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface
-                        ),
-                        onClick = {
-                            expander = false
-                            selected = op
-                            onValueChange(op)
-                        },
-                        text = {
-                            Text(
-                                text = op.display,
-                                modifier = Modifier
-                                    .padding(top = 10.dp)
-                                    .fillMaxWidth(),
-                                softWrap = false,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        })
-
+            Box(Modifier.graphicsLayer {
+                if(expander){
+                    translationY = -16.dp.toPx()
                 }
+            }){
+                DropdownMenu(
+                    expanded = expander,
+                    modifier = Modifier
+                        .width(rowSize.width.toDp())
+                        .heightIn(max = 250.dp)
+                        .background(colors.focusedContainerColor),
+                    onDismissRequest = { expander = false }) {
+                    choices.forEach { op ->
+                        DropdownMenuItem(
+                            colors = MenuDefaults.itemColors(
+                                textColor =
+                                if (op == selected) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSurface
+                            ),
+                            onClick = {
+                                expander = false
+                                selected = op
+                                onValueChange(op)
+                            },
+                            text = {
+                                Text(
+                                    text = op.display,
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .fillMaxWidth(),
+                                    softWrap = false,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            })
+
+                    }
+                }
+
             }
 
         }

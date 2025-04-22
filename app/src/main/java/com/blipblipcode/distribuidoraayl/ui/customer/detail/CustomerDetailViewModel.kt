@@ -39,7 +39,7 @@ class CustomerDetailViewModel @Inject constructor(
     getRegionsUseCase: dagger.Lazy<IGetRegionsUseCase>,
     getRubrosUseCase: dagger.Lazy<IGetRubrosUseCase>,
     getRoutsUseCase: dagger.Lazy<IGetRoutesUseCase>,
-    private val getCustomerFlowUseCase: dagger.Lazy<IGetCustomerFlowUseCase>,
+    getCustomerFlowUseCase: dagger.Lazy<IGetCustomerFlowUseCase>,
     private val getTaxpayerUseCase: dagger.Lazy<IGetTaxpayerUseCase>,
     private val createOrUpdateCustomerUseCase: dagger.Lazy<ICreateOrUpdateCustomerUseCase>,
 ) : CustomerBaseViewModel(true) {

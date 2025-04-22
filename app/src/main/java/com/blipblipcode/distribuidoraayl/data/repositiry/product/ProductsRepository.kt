@@ -1,12 +1,16 @@
 package com.blipblipcode.distribuidoraayl.data.repositiry.product
 
 import android.content.Context
+import android.util.Log
+import com.blipblipcode.distribuidoraayl.core.local.entities.product.ProductEntity
+import com.blipblipcode.distribuidoraayl.core.local.room.ProductDao
 import com.blipblipcode.distribuidoraayl.data.dto.products.CategoryDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductBrandsDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.UdmDto
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseFireStoreRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.remoteMediator
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
@@ -15,14 +19,20 @@ import com.blipblipcode.distribuidoraayl.domain.models.products.Udm
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ProductsRepository @Inject constructor(
     dispatcher: CoroutineDispatcher,
     context: Context,
-    override val fireStore: FirebaseFirestore
+    override val fireStore: FirebaseFirestore,
+    private val remoteMediator: ProductRemoteMediator,
+    private val productDao: ProductDao
 ):BaseFireStoreRepository(dispatcher, context, fireStore), IProductsRepository {
     companion object{
         const val CATALOGUE = "catalogue_products"
@@ -30,6 +40,7 @@ class ProductsRepository @Inject constructor(
         const val BRANDS = "brands"
         const val UDM = "udm"
     }
+
 
     override suspend fun createBrand(brand: ProductBrands): ResultType<Unit> {
         return makeCallNetwork {
@@ -58,15 +69,45 @@ class ProductsRepository @Inject constructor(
 
     override suspend fun deleteProduct(product: Product):ResultType<Unit>{
         return makeCallNetwork {
-            fireStore.collection(CATALOGUE).document(product.uid).delete().await()
+           fireStore.collection(CATALOGUE).document(product.uid).delete().await()
         }
 
     }
 
-    override fun getProducts(uid: String): Flow<Product> {
+    override fun getProduct(uid: String): Flow<Product> {
         return getDocumentFlow<ProductDto, Product>(CATALOGUE, uid )
     }
 
+    override suspend fun getProductByBarcode(barcode: String): ResultType<Product> {
+        return makeCallDatabase {
+            productDao.getProductByBarCode(barcode)!!.mapToDomain()
+        }
+    }
+
+    override suspend fun getProductBySku(sku: String): ResultType<Product> {
+        return makeCallDatabase {
+            productDao.getProductBySku(sku)!!.mapToDomain()
+        }
+    }
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getProducts(): Flow<List<Product>> {
+
+        Log.d("ProductRemoteMediator", "onFlow")
+        return productDao.getProducts()
+            .remoteMediator(remoteMediator)
+            .flatMapConcat { listProductEntity ->
+                mapToDomain(listProductEntity)
+            }
+    }
+
+    private fun mapToDomain(listProductEntity: List<ProductEntity>): Flow<List<Product>> = flow {
+        emit(
+            listProductEntity.map { it.mapToDomain() }
+        )
+    }
+    
     override fun getCategoryList(): Flow<List<Category>> {
         return getDocumentsFlow<CategoryDto, Category>(CATEGORIES)
     }
@@ -78,5 +119,12 @@ class ProductsRepository @Inject constructor(
     override fun getUds(): Flow<List<Udm>>{
         return getDocumentsFlow<UdmDto, Udm>(UDM)
     }
+
+    override suspend fun getProductByUid(uid: String): ResultType<Product> {
+        return makeCallDatabase {
+            productDao.getProduct(uid)!!.mapToDomain()
+        }
+    }
+
 
 }

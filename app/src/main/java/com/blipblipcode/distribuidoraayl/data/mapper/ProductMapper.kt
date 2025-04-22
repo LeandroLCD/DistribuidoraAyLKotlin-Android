@@ -42,7 +42,7 @@ fun Product.toDto(): ProductDto {
         udm = udm.toDto(),
         barCode = barCode,
         name = name,
-        netPrice = netPrice,
+        grossPrice = grossPrice,
         offer = offer.toDto()
     )
 }

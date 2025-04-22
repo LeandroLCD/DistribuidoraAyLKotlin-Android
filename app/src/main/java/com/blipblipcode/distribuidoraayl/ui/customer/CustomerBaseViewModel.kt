@@ -20,16 +20,13 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-open class CustomerBaseViewModel(loadingIni:Boolean = false,
-                                 internal val mErrorException: MutableStateFlow<Throwable?> = MutableStateFlow<Throwable?>(
-                                     null
-                                 )
-): ViewModel() {
+open class CustomerBaseViewModel(loadingIni:Boolean = false): ViewModel() {
 
     /*States*/
     internal val misLoading = MutableStateFlow(loadingIni)
     val isLoading = misLoading.asStateFlow()
 
+    internal val mErrorException: MutableStateFlow<Throwable?> = MutableStateFlow(null)
     val errorException = mErrorException.asStateFlow()
     internal open val mCustomer = MutableStateFlow(Customer())
 
