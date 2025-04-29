@@ -69,6 +69,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun CustomerClientsScreen(
+    drawerOpen:()->Unit,
     viewModel: CustomerListViewModel = hiltViewModel(),
     onNavigateTo: (CustomerScreen) -> Unit
 ) {
@@ -79,7 +80,7 @@ fun CustomerClientsScreen(
     Scaffold(
         topBar = {
             CustomerClientTopBar(onClickMenu = {
-                /*TODO open drawer*/
+                drawerOpen.invoke()
             },
                 onAddRoute = {
                     isVisible = true

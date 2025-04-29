@@ -61,4 +61,7 @@
     <string name="add_category">Agregar Categoria</string>
     <string name="offer_percentage">Oferta: %1$.1f %%</string>
     <string name="product_list">Lista de Productos.</string>
+    <string name="drawer_text_customers">Catalogo de Clientes</string>
+    <string name="drawer_text_products">Catalogo de Productos</string>
+    <string name="drawer_text_logout">Cerrar Sesión</string>
 </resources>

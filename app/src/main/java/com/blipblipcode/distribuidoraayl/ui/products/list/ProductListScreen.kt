@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,26 +38,26 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
-import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ProductScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.ItemFilter
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.SwipeMenuItem
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.rememberSwipeMenuState
-import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.CustomerClientTopBar
 import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.ProductListTopBar
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel(),
+    drawerOpen: () -> Unit,
     onNavigateTo: (ProductScreen) -> Unit
 ) {
     val products by viewModel.products.collectAsState()
     Scaffold(
         topBar = {
             ProductListTopBar(onClickMenu = {
-                /*TODO open drawer*/
+                drawerOpen.invoke()
             },
                 onClickFilter = {
                     /*TODO add filter*/
