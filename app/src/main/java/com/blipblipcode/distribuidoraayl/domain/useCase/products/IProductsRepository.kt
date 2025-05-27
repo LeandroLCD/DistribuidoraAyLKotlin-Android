@@ -34,4 +34,6 @@ interface IProductsRepository {
     fun getUds(): Flow<List<Udm>>
 
     suspend fun getProductByUid(uid: String): ResultType<Product>
+
+    fun searchProducts(search: String): Flow<List<Product>>
 }

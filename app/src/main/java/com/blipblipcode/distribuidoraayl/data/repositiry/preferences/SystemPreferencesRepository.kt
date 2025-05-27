@@ -16,6 +16,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -29,6 +30,8 @@ class SystemPreferencesRepository @Inject constructor(
     private val gsonFactory: Gson
 ):BaseRepository(dispatcher, context), ISystemPreferencesRepository {
 
+    private var cachedCredentials: CredentialOf? = null
+
     companion object{
         const val CREDENTIAL_OF = "credential_of"
         const val ECOMMERCE_KEY = "ecommerce"
@@ -36,6 +39,12 @@ class SystemPreferencesRepository @Inject constructor(
         val ECOMMERCE_KEY_PREFERENCE = stringPreferencesKey(ECOMMERCE_KEY)
     }
     init {
+        val credentialJson = remoteConfig.getString(CREDENTIAL_OF)
+        if (credentialJson.isNotEmpty()) {
+            cachedCredentials = gsonFactory.fromJson(credentialJson, CredentialOfDto::class.java).mapToDomain()
+        }
+
+        // Sincronización en segundo plano
         repositoryScope.launch {
             syncCredentialOf()
             syncECommerce()
@@ -64,11 +73,23 @@ class SystemPreferencesRepository @Inject constructor(
         }
     }
 
-    override fun getCredentialOf(): Flow<CredentialOf> = preferences
+    override fun getCredentials(): CredentialOf {
+        return cachedCredentials ?: run {
+            val credentialJson = remoteConfig.getString(CREDENTIAL_OF)
+            if (credentialJson.isNotEmpty()) {
+                cachedCredentials = gsonFactory.fromJson(credentialJson, CredentialOfDto::class.java).mapToDomain()
+            }
+            cachedCredentials ?: CredentialOf(apikey = "41eb78998d444dbaa4922c410ef14057", url = "https://dev-api.haulmer.com/v2/dte/")
+        }
+    }
+
+    override fun observeCredentialOf(): Flow<CredentialOf> = preferences
         .data.transform { preferences ->
             val json = preferences[CREDENTIAL_KEY]
-            if(!json.isNullOrEmpty()){
-                gsonFactory.fromJson(json, CredentialOfDto::class.java).mapToDomain()
+            if (!json.isNullOrEmpty()) {
+                val credentials = gsonFactory.fromJson(json, CredentialOfDto::class.java).mapToDomain()
+                cachedCredentials = credentials
+                emit(credentials)
             }
         }
 
@@ -95,12 +116,11 @@ class SystemPreferencesRepository @Inject constructor(
     }
 
 
-    override fun getECommerce(): Flow<ECommerce> = preferences
-        .data.transform { preferences ->
+    override fun observeECommerce(): Flow<ECommerce> = preferences
+        .data.map { preferences ->
             val json = preferences[ECOMMERCE_KEY_PREFERENCE]
-            if(!json.isNullOrEmpty()){
-                gsonFactory.fromJson(json, ECommerceDto::class.java).mapToDomain()
-            }
+            val domain = gsonFactory.fromJson(json, ECommerceDto::class.java).mapToDomain()
+            domain
         }
 
 }

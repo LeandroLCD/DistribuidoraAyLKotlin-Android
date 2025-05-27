@@ -167,7 +167,9 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.6f))
-            )
+            ) {
+                Text(stringResource(R.string.gnerating_document))
+            }
 
 
         }

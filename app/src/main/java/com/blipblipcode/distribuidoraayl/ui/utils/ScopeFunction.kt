@@ -55,6 +55,19 @@ fun Context.createTxtFileInDownloadsWithMediaStore(fileName: String, path:String
     return itemUri
 }
 
+fun Context.shareFileByEmail(fileUri: Uri, title:String, typeFile: String = "text/plain") {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+
+        type = typeFile
+
+        putExtra(Intent.EXTRA_STREAM, fileUri)
+
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    startActivity(Intent.createChooser(intent, title))
+}
+
 fun Context.shareTxtFileByEmail(fileUri: Uri, title:String, subject: String? = null, body: String? = null) {
     val intent = Intent(Intent.ACTION_SEND).apply {
 

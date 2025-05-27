@@ -66,7 +66,7 @@ fun DistribuidoraAyLDrawer(
         drawerContent = {
             ModalDrawerSheet(
                 drawerShape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
-                modifier = Modifier.systemBarsPadding().requiredWidth(300.dp)
+                modifier = Modifier.systemBarsPadding().fillMaxWidth(0.8f)
             ) {
                 DrawerContent(navController, onItemClick = {screen->
                     scope.launch {

@@ -14,16 +14,28 @@ import com.blipblipcode.distribuidoraayl.ui.customer.list.CustomerClientsScreen
 import com.blipblipcode.distribuidoraayl.ui.dawer.DistribuidoraAyLDrawer
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ProductScreen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.SalesScreen
 import com.blipblipcode.distribuidoraayl.ui.products.add.AddProductScreen
 import com.blipblipcode.distribuidoraayl.ui.products.details.ProductDetailScreen
 import com.blipblipcode.distribuidoraayl.ui.products.list.ProductListScreen
+import com.blipblipcode.distribuidoraayl.ui.sales.SaleScreen
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeNavigationHost(navHostController: NavHostController, onISignOutUseCase: ISignOutUseCase) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    NavHost(navController = navHostController, startDestination = ProductScreen.List) {
+    NavHost(navController = navHostController, startDestination = SalesScreen) {
+
+        composable<SalesScreen> {
+            DistribuidoraAyLDrawer(navHostController, drawerState, onISignOutUseCase) {
+                SaleScreen {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
+            }
+        }
 
         composable<CustomerScreen.List> {
             DistribuidoraAyLDrawer(navHostController, drawerState, onISignOutUseCase) {

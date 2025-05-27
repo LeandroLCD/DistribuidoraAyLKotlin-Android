@@ -10,6 +10,8 @@ interface IGetProductUseCase {
     ): Flow<Product>
     suspend fun byUid(uid:String):ResultType<Product>
 
+    fun search(search:String):Flow<List<Product>>
+
     suspend fun bySku(sku:String):ResultType<Product>
 
     suspend fun byBarcode(barcode:String):ResultType<Product>

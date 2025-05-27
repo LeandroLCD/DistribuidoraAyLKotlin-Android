@@ -10,6 +10,6 @@ internal class GetEcommerceUseCase @Inject constructor(
     private val systemPreferencesRepository: ISystemPreferencesRepository
 ) : IGetEcommerceUseCase {
     override fun invoke(): Flow<ECommerce> {
-        return systemPreferencesRepository.getECommerce()
+        return systemPreferencesRepository.observeECommerce()
     }
 }

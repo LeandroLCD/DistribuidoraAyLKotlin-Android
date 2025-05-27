@@ -340,7 +340,9 @@ fun ProductDetailScreen(
                 viewModel.onAddCategory(it)
             }
 
-            LoadingScreen(isLoading, modifier = Modifier.fillMaxWidth())
+            LoadingScreen(isLoading, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.gnerating_document))
+            }
 
         }
     }

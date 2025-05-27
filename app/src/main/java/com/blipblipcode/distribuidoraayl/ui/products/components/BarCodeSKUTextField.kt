@@ -30,6 +30,7 @@ fun BarCodeSKUTextField(
     isReadOnly: Boolean = false,
     errorMessage: String? = null,
     onClickScanner: () -> Unit,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Next
@@ -60,6 +61,7 @@ fun BarCodeSKUTextField(
                 Icon(painterResource(R.drawable.barcode_scanner), contentDescription = "Scanner")
             }
         },
+        trailingIcon = trailingIcon,
         readOnly = isReadOnly,
         keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions(onNext = {

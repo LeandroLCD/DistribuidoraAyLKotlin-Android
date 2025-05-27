@@ -442,7 +442,9 @@ fun CustomerDetailScreen(
 
             }
         }
-        LoadingScreen(isLoading, Modifier.fillMaxSize())
+        LoadingScreen(isLoading, Modifier.fillMaxSize()) {
+            Text(stringResource(R.string.gnerating_document))
+        }
 
     }
 }

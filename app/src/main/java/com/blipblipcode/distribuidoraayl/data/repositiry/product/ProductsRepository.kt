@@ -23,6 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -123,6 +124,12 @@ class ProductsRepository @Inject constructor(
     override suspend fun getProductByUid(uid: String): ResultType<Product> {
         return makeCallDatabase {
             productDao.getProduct(uid)!!.mapToDomain()
+        }
+    }
+
+    override fun searchProducts(search: String): Flow<List<Product>> {
+        return productDao.searchProducts(search).map { list->
+            list.map { it.mapToDomain() }
         }
     }
 

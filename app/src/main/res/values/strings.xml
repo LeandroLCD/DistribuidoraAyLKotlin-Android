@@ -61,7 +61,26 @@
     <string name="add_category">Agregar Categoria</string>
     <string name="offer_percentage">Oferta: %1$.1f %%</string>
     <string name="product_list">Lista de Productos.</string>
-    <string name="drawer_text_customers">Catalogo de Clientes</string>
+    <string name="drawer_text_customers">Catagolo de Clientes</string>
     <string name="drawer_text_products">Catalogo de Productos</string>
     <string name="drawer_text_logout">Cerrar Sesión</string>
+    <string name="drawer_text_sales">Ingresar Venta</string>
+    <string name="select_customer">Seleccione un Cliente.</string>
+    <string name="search">Buscar</string>
+    <string name="all">Todos</string>
+    <string name="product_not_found">Sin resultados</string>
+    <string name="add">Agregar</string>
+    <string name="preview">Preview</string>
+    <string name="error_load_pdf">Error al cargar el pdf</string>
+    <string name="pague">Página %1$s</string>
+    <string name="of">de %1$s</string>
+    <string name="cash">Contado</string>
+    <string name="credit">Crédito</string>
+    <string name="generate_fc">Generar Factura</string>
+    <string name="payment_method">Seleccione el Método de pago.</string>
+    <string name="has_select">Has seleccionado</string>
+    <string name="with_payment_method">como método de pago.</string>
+    <string name="gnerating_document">Generando Documento...</string>
+    <string name="document">Documento %1$s</string>
+    <string name="share">Compartir PDF</string>
 </resources>

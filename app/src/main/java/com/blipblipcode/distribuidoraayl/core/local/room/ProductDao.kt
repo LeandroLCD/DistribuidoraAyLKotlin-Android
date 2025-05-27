@@ -32,4 +32,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM products")
     fun getProducts(): Flow<List<ProductEntity>>
+
+    @Query("SELECT * FROM products WHERE name LIKE '%' || :search || '%' OR sku LIKE '%' || :search || '%' OR barCode LIKE '%' || :search || '%'")
+    fun searchProducts(search: String): Flow<List<ProductEntity>>
 }

@@ -18,6 +18,10 @@ internal class GetProductUseCase @Inject constructor(private val repository: IPr
         return repository.getProductByUid(uid)
     }
 
+    override fun search(search: String): Flow<List<Product>> {
+        return repository.searchProducts(search)
+    }
+
     override suspend fun bySku(sku: String): ResultType<Product> {
         return repository.getProductBySku(sku)
     }

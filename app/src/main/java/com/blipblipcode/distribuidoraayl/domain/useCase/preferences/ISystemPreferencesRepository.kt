@@ -7,12 +7,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface ISystemPreferencesRepository {
 
+    // Métodos síncronos para credenciales
+    fun getCredentials(): CredentialOf
+
+    // Métodos para actualización asíncrona
     suspend fun syncCredentialOf(): ResultType<CredentialOf>
-
-    fun getCredentialOf(): Flow<CredentialOf>
-
     suspend fun syncECommerce(): ResultType<ECommerce>
 
-    fun getECommerce(): Flow<ECommerce>
+    // Observables para cambios
+    fun observeCredentialOf(): Flow<CredentialOf>
+    fun observeECommerce(): Flow<ECommerce>
 
 }
