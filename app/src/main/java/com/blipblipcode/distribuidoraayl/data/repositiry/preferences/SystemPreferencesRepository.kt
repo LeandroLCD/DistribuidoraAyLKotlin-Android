@@ -39,11 +39,6 @@ class SystemPreferencesRepository @Inject constructor(
         val ECOMMERCE_KEY_PREFERENCE = stringPreferencesKey(ECOMMERCE_KEY)
     }
     init {
-        val credentialJson = remoteConfig.getString(CREDENTIAL_OF)
-        if (credentialJson.isNotEmpty()) {
-            cachedCredentials = gsonFactory.fromJson(credentialJson, CredentialOfDto::class.java).mapToDomain()
-        }
-
         // Sincronización en segundo plano
         repositoryScope.launch {
             syncCredentialOf()
@@ -62,7 +57,9 @@ class SystemPreferencesRepository @Inject constructor(
                                 it[CREDENTIAL_KEY] = credentialOf
                             }
                         }
-                        continuation.resume(gsonFactory.fromJson(credentialOf, CredentialOfDto::class.java).mapToDomain())
+                        remoteConfig.setDefaultsAsync(mapOf(CREDENTIAL_OF to credentialOf))
+                        cachedCredentials = gsonFactory.fromJson(credentialOf, CredentialOfDto::class.java).mapToDomain()
+                        continuation.resume(cachedCredentials!!)
                     }else{
                         continuation.cancel(task.exception)
                     }

@@ -1,6 +1,7 @@
 package com.blipblipcode.distribuidoraayl.ui.sales.models
 
 import android.net.Uri
+import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 
 sealed interface SaleUiState {
@@ -9,6 +10,6 @@ sealed interface SaleUiState {
 
     data class  PreviewSale(val uri: Uri, val sale: Sale): SaleUiState
 
-    data class FinishSale(val uri: Uri, val docNumber:Int): SaleUiState
+    data class FinishSale(val doc: DocumentElectronic): SaleUiState
 
 }

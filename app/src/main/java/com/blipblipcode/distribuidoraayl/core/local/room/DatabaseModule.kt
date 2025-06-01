@@ -2,6 +2,7 @@ package com.blipblipcode.distribuidoraayl.core.local.room
 
 import android.content.Context
 import androidx.room.Room
+import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

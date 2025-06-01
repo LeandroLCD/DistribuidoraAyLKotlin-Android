@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.core.local.room
+package com.blipblipcode.distribuidoraayl.core.local.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(product: ProductEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(products: List<ProductEntity>)
 
     @Query("DELETE FROM products WHERE uid = :uid")

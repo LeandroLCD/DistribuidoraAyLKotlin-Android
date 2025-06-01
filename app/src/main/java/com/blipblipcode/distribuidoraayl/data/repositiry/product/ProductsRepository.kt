@@ -3,7 +3,7 @@ package com.blipblipcode.distribuidoraayl.data.repositiry.product
 import android.content.Context
 import android.util.Log
 import com.blipblipcode.distribuidoraayl.core.local.entities.product.ProductEntity
-import com.blipblipcode.distribuidoraayl.core.local.room.ProductDao
+import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import com.blipblipcode.distribuidoraayl.data.dto.products.CategoryDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductBrandsDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductDto

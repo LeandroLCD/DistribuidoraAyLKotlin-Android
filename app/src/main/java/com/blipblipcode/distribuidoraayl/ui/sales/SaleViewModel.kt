@@ -6,6 +6,8 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Activity
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Branch
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
+import com.blipblipcode.distribuidoraayl.domain.models.onError
+import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
@@ -17,6 +19,8 @@ import com.blipblipcode.distribuidoraayl.domain.models.sales.Totals
 import com.blipblipcode.distribuidoraayl.domain.throwable.BackendErrorException
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetCustomersUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetRoutesUseCase
+import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IGenerateInvoiceUseCase
+import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IGeneratePreviewUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.IGetEcommerceUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetCategoriesUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetProductUseCase
@@ -49,8 +53,8 @@ class SaleViewModel @Inject constructor(
     getEcommerceUseCase: dagger.Lazy<IGetEcommerceUseCase>,
     getCategoriesUseCase: dagger.Lazy<IGetCategoriesUseCase>,
     private val getProductUseCase: dagger.Lazy<IGetProductUseCase>,
-    //private val generatePreviewUseCase: dagger.Lazy<IGeneratePreviewUseCase>,
-    //private val generateInvoiceUseCase: dagger.Lazy<IGenerateInvoiceUseCase>
+    private val generatePreviewUseCase: dagger.Lazy<IGeneratePreviewUseCase>,
+    private val generateInvoiceUseCase: dagger.Lazy<IGenerateInvoiceUseCase>
 ) : ViewModel() {
     /*Event*/
 
@@ -343,11 +347,11 @@ class SaleViewModel @Inject constructor(
                 },
                 totals = total
             )
-           /* generatePreviewUseCase.get().invoke(sale).onError {
+           generatePreviewUseCase.get().invoke(sale).onError {
                 _errorException.tryEmit(it)
             }.onSuccess {
                 onUiChanged(SaleUiState.PreviewSale(it, sale))
-            }*/
+            }
         }
     }
 
@@ -360,12 +364,12 @@ class SaleViewModel @Inject constructor(
     fun onGenerateDte(payment: Payment, sale: Sale) {
         viewModelScope.launch {
             _isLoading.tryEmit(true)
-            /*generateInvoiceUseCase.get().invoke(payment, sale).onError {
+            generateInvoiceUseCase.get().invoke(payment, sale).onError {
                 _errorException.tryEmit(it)
             }.onSuccess {
                 clearSale()
-                onUiChanged(SaleUiState.FinishSale(it.first, it.second))
-            }*/
+                onUiChanged(SaleUiState.FinishSale(it))
+            }
             _isLoading.tryEmit(false)
         }
     }

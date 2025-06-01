@@ -34,7 +34,7 @@ fun SaleScreen(viewModel: SaleViewModel = hiltViewModel(),
         AnimatedContent(uiState) { ui->
             when(ui){
                 is SaleUiState.FinishSale -> {
-                    PdfScreen(ui.uri, ui.docNumber){
+                    PdfScreen(ui.doc.uri, ui.doc.number){
                         viewModel.onUiChanged(SaleUiState.NewSale)
                     }
                 }

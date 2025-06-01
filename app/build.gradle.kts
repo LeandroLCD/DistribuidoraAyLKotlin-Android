@@ -66,6 +66,9 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.androidx.compose)
 
+    //pdf
+    implementation(libs.itext7.core)
+
     //navigation
     implementation(libs.bundles.compose.navigation)
 

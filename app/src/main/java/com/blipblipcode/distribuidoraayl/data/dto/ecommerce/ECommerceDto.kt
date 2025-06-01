@@ -15,9 +15,9 @@ data class ECommerceDto(
     @SerializedName("giro_emis") val businessLine: String,
     @SerializedName("iva") val iva: Double,
     @SerializedName("office_code") val officeCode: String,
-    @SerializedName("RUT_emisor") val issuerRut: String,
-    @SerializedName("rzn_soc") val businessName: String,
-    @SerializedName("telefono") val phone: Long,
+    @SerializedName("RUT_emisor") val rut: String,
+    @SerializedName("rzn_soc") val companyName: String,
+    @SerializedName("telefono") val phone: String,
     @SerializedName("direccion_regional") val regionalAddress: String
 ) : Mappable<ECommerce> {
     override fun mapToDomain() = ECommerce(
@@ -31,8 +31,8 @@ data class ECommerceDto(
         businessLine = businessLine,
         iva = iva,
         officeCode = officeCode,
-        issuerRut = issuerRut,
-        businessName = businessName,
+        rut = rut,
+        companyName = companyName,
         phone = phone,
         regionalAddress = regionalAddress
     )

@@ -3,7 +3,7 @@ package com.blipblipcode.distribuidoraayl.data.repositiry.product
 import android.util.Log
 import androidx.room.withTransaction
 import com.blipblipcode.distribuidoraayl.core.local.room.DataBaseApp
-import com.blipblipcode.distribuidoraayl.core.local.room.ProductDao
+import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.RemoteMediator
 import com.google.firebase.firestore.EventListener

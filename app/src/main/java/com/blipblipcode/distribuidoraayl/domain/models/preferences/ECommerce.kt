@@ -11,8 +11,8 @@ data class ECommerce(
     val businessLine: String,
     val iva: Double,
     val officeCode: String,
-    val issuerRut: String,
-    val businessName: String,
-    val phone: Long,
+    val rut: String,
+    val companyName: String,
+    val phone: String,
     val regionalAddress: String
 )
