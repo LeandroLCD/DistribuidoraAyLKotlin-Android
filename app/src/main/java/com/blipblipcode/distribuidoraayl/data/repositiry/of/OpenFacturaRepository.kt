@@ -10,7 +10,7 @@ import com.blipblipcode.distribuidoraayl.data.dto.of.EmissionResponseDto
 import com.blipblipcode.distribuidoraayl.data.mapper.toElectronicInvoice
 import com.blipblipcode.distribuidoraayl.data.mapper.toEntity
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
-import com.blipblipcode.distribuidoraayl.data.repositiry.product.EventManager
+import com.blipblipcode.distribuidoraayl.data.repositiry.EventManager
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.of.Taxpayer
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
@@ -46,7 +46,7 @@ class OpenFacturaRepository @Inject constructor(
             val response =  openFacturaApi.generateSale(dto)
 
             eventManager.addCall {
-                saveReportSAle(sale, response)
+                saveReportSale(sale, response)
             }
             val uri =  pdfManager.generateDte(
                 sale,
@@ -60,11 +60,11 @@ class OpenFacturaRepository @Inject constructor(
         }
     }
 
-    private suspend fun saveReportSAle(sale: Sale, response: EmissionResponseDto){
+    private suspend fun saveReportSale(sale: Sale, response: EmissionResponseDto){
         val saleEntity = SaleDataEntity(
             number = response.number,
             clientRut = sale.receiver.rut,
-            date = sale.date.format(FormatType.Large('-')),
+            date = sale.date.format("yyyy-MM-dd"),
             token = response.token,
             resolution = ResolutionEntity(date =response.resolution.date, number =  response.resolution.number),
             timbre = response.timbre

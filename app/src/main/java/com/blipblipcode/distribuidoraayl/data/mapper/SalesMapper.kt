@@ -1,6 +1,7 @@
 package com.blipblipcode.distribuidoraayl.data.mapper
 
 import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ClientReceiverEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ReportSaleEntity
 import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SalesItemEntity
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.CodeDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.DteDto
@@ -11,6 +12,10 @@ import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.IdDocDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ItemDetailDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ReceiverDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.TotalsDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ClientReceiverDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ReportSaleDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ResolutionTdo
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.SalesItemsDto
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
@@ -118,6 +123,42 @@ fun ClientReceiver.toEntity(): ClientReceiverEntity{
         address = address,
         commune = commune,
         turn = turn
+    )
+
+}
+
+fun ReportSaleEntity.toDto(): ReportSaleDto{
+    return ReportSaleDto(
+        uid = sale.uid,
+        number = sale.number,
+        date = sale.date,
+        token = sale.token,
+        resolution = sale.resolution?.let { ResolutionTdo(it.number, it.date) },
+        timbre = sale.timbre,
+        receiver = client.toDto(),
+        items = items.map { it.toDto() }
+    )
+
+}
+fun ClientReceiverEntity.toDto(): ClientReceiverDto{
+    return ClientReceiverDto(
+        rut = rut,
+        name = name,
+        address = address,
+        commune = commune,
+        turn = turn
+    )
+}
+
+fun SalesItemEntity.toDto(): SalesItemsDto {
+    return SalesItemsDto(
+        index = index,
+        sku = sku,
+        barCode = barCode,
+        name = name,
+        description = description,
+        price = price,
+        quantity = quantity
     )
 
 }

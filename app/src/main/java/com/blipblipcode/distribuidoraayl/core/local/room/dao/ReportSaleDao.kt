@@ -16,8 +16,11 @@ interface ReportSaleDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertSaleItems(items: List<SalesItemEntity>)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSaleSync(sale: SaleDataEntity)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateSaleSync(sales: List<SaleDataEntity>)
 
     @Query("DELETE FROM sale_data WHERE isSynchronized = 1")
     suspend fun deleteSynchronizedSales()
