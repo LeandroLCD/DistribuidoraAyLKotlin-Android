@@ -2,7 +2,6 @@ package com.blipblipcode.distribuidoraayl.data.dto.reportSale
 
 import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SalesItemEntity
 import com.blipblipcode.distribuidoraayl.data.mapper.ToEntity
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
 @Suppress("unused")
@@ -35,7 +34,7 @@ class SalesItemsDto(
     @set:PropertyName("quantity")
     var quantity:Int
 ):ToEntity<SalesItemEntity> {
-    constructor(): this("", 0, "", null, "", null, 0, 0)
+    constructor(): this(0, "", null, "", null, 0, 0)
 
     override fun mapToEntity(): SalesItemEntity {
         return SalesItemEntity(

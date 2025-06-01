@@ -5,24 +5,23 @@ import com.blipblipcode.distribuidoraayl.core.local.room.dao.ReportSaleDao
 import com.blipblipcode.distribuidoraayl.data.mapper.toDto
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseFireStoreRepository
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
+import com.blipblipcode.distribuidoraayl.domain.useCase.reportSale.IReportSaleRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.text.set
 
 class ReportSaleRepository @Inject constructor(
     dispatcher: CoroutineDispatcher,
     context: Context,
     override val fireStore: FirebaseFirestore,
     private val reportSaleDao: ReportSaleDao
-): BaseFireStoreRepository(dispatcher, context, fireStore){
+): BaseFireStoreRepository(dispatcher, context, fireStore), IReportSaleRepository{
     companion object{
         const val REPORT_SALES = "report_sales"
     }
 
-    suspend fun syncReportSales(): ResultType<Unit>{
+    override suspend fun syncReportSales(): ResultType<Unit>{
         return makeCallNetwork {
             val sales = reportSaleDao.getUnSynchronizedSales()
             if(sales.isEmpty()){

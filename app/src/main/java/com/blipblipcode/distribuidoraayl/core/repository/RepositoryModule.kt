@@ -6,12 +6,14 @@ import com.blipblipcode.distribuidoraayl.data.repositiry.of.OpenFacturaRepositor
 import com.blipblipcode.distribuidoraayl.data.repositiry.pdf.PdfManagerRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.product.ProductsRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.reportSale.ReportSaleRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.IAuthRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.reportSale.IReportSaleRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +61,9 @@ class RepositoryModule {
         return pdfManagerRepository
     }
 
+    @Singleton
+    @Provides
+    fun provideReportSaleRepository(reportSaleRepository: ReportSaleRepository): IReportSaleRepository {
+        return reportSaleRepository
+    }
 }

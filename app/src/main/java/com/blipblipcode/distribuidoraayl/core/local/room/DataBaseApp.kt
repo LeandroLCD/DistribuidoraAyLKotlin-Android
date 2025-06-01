@@ -16,7 +16,7 @@ import com.blipblipcode.distribuidoraayl.core.local.room.dao.ReportSaleDao
         SalesItemEntity::class,
         ClientReceiverEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class DataBaseApp : RoomDatabase() {
