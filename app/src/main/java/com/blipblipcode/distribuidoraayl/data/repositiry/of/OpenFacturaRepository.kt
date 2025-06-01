@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.withTransaction
 import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ResolutionEntity
 import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SaleDataEntity
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SalesItemEntity
 import com.blipblipcode.distribuidoraayl.core.local.room.DataBaseApp
 import com.blipblipcode.distribuidoraayl.core.network.IOpenFacturaApi
 import com.blipblipcode.distribuidoraayl.data.dto.of.EmissionResponseDto
@@ -22,7 +21,6 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFactura
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
 import com.blipblipcode.library.model.FormatType
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class OpenFacturaRepository @Inject constructor(

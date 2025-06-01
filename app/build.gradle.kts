@@ -89,14 +89,14 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.interceptor)
 
-    //fireBase
+    //firebase
     implementation(platform(libs.firebase.boom))
     implementation(libs.bundles.firebase)
 
     //playService
     implementation(libs.bundles.play.service)
 
-    //Room
+    //room
     implementation(libs.bundles.room)
     annotationProcessor(libs.android.room.compiler)
     ksp(libs.android.room.compiler)
@@ -105,6 +105,9 @@ dependencies {
     //hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
+
+    //workManager
+    implementation(libs.bundles.work.manager)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

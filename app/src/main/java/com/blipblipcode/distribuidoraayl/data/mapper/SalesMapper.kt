@@ -17,11 +17,6 @@ import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Totals
-import kotlin.collections.map
-import kotlin.math.roundToInt
-import kotlin.text.isNullOrBlank
-import kotlin.text.orEmpty
-import kotlin.text.take
 
 fun Sale.toElectronicInvoice(payment: Payment, isLetter: Boolean = true): ElectronicInvoiceDto {
     val pay = (payment is Payment.Cash).transform(1, 2)
