@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.core.utils
+package com.blipblipcode.distribuidoraayl.core.di.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

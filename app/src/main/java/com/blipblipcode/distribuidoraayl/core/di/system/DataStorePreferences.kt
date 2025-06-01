@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.core.system
+package com.blipblipcode.distribuidoraayl.core.di.system
 
 import android.content.Context
 import androidx.annotation.Keep

@@ -1,4 +1,4 @@
-package com.blipblipcode.distribuidoraayl.core.utils
+package com.blipblipcode.distribuidoraayl.core.di.utils
 
 
 const val KEY_TIME_CACHE_VERIFIED = "KEY_TIME_CACHE_VERIFIED"
