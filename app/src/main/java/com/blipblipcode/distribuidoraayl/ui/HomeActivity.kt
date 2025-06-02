@@ -32,13 +32,13 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        syncUpRepository.runPeriodicWork(1L)
+        syncUpRepository.runPeriodicWork(10L)
         setContent {
             val navHostController = rememberNavController()
             LaunchedEffect(Unit) {
-                syncUpRepository.workInfoFlow().collect {
+               /* syncUpRepository.workInfoFlow().collect {
                     Log.d("SyncUpWorker", "status= ${it.last().state}, workInfoFlow: ${it.last().outputData.getBoolean("success", false)}")
-                }
+                }*/
             }
             DistribuidoraAyLTheme {
                 HomeNavigationHost(navHostController, onISignOutUseCase)
