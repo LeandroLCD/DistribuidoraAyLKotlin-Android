@@ -25,7 +25,7 @@ class SyncUpRepository @Inject constructor(
     override fun runPeriodicWork(intervalInMinutes: Long) {
         workManager.enqueueUniquePeriodicWork(
             SyncUpWorker.TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             SyncUpWorker.periodicWorkRequest(intervalInMinutes)
         )
     }

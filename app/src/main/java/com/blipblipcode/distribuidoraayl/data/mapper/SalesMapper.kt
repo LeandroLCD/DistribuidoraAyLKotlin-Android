@@ -129,7 +129,7 @@ fun ClientReceiver.toEntity(): ClientReceiverEntity{
 
 fun ReportSaleEntity.toDto(): ReportSaleDto{
     return ReportSaleDto(
-        uid = sale.uid,
+        uid = sale.uid.orEmpty(),
         number = sale.number,
         date = sale.date,
         token = sale.token,

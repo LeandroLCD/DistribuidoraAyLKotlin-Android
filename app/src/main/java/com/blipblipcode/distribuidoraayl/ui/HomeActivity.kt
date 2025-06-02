@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.rememberNavController
+import com.blipblipcode.distribuidoraayl.data.repositiry.reportSale.ReportSaleRepository
 import com.blipblipcode.distribuidoraayl.data.worker.SyncUpRepository
 import com.blipblipcode.distribuidoraayl.data.worker.SyncUpWorker
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.ISignOutUseCase
@@ -31,12 +32,12 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        syncUpRepository.runPeriodicWork()
+        syncUpRepository.runPeriodicWork(1L)
         setContent {
             val navHostController = rememberNavController()
             LaunchedEffect(Unit) {
                 syncUpRepository.workInfoFlow().collect {
-                    Log.d("SyncUpWorker", "workInfoFlow: ${it.last().outputData.getBoolean("success", false)}")
+                    Log.d("SyncUpWorker", "status= ${it.last().state}, workInfoFlow: ${it.last().outputData.getBoolean("success", false)}")
                 }
             }
             DistribuidoraAyLTheme {

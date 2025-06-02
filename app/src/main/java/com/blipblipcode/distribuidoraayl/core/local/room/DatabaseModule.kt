@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import com.blipblipcode.distribuidoraayl.core.local.room.dao.ReportSaleDao
+import com.blipblipcode.distribuidoraayl.core.local.room.migrations.MigrationsFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +23,7 @@ class DatabaseModule {
             context,
             DataBaseApp::class.java,
             "distribuidoraayl.db"
-        ).build()
+        ).addMigrations(MigrationsFactory.MIGRATION_3_4).build()
     }
 
     @Provides

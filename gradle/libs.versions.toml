@@ -156,7 +156,7 @@ hilt = ["androidx-hilt-navigation-compose", "hilt-android"]
 cameraX = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-extensions"]
 play-service = ["googleid", "play-service"]
 dateTime = ["dateTime", "threetenabp"]
-work-manager = ["androidx-hilt-common", "androidx-hilt-work", "androidx-hilt-compiler", "androidx-startup", "androidx-work"]
+work-manager = ["androidx-hilt-common", "androidx-hilt-work", "androidx-work"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

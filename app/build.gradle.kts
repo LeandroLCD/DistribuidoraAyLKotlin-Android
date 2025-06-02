@@ -43,7 +43,12 @@ android {
     buildFeatures {
         compose = true
     }
-    packagingOptions.resources.excludes.addAll(listOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/gradle/incremental.annotation.processors") )
+    packagingOptions.resources.excludes.addAll(
+        listOf(
+            "/META-INF/{AL2.0,LGPL2.1}",
+            "META-INF/gradle/incremental.annotation.processors"
+        )
+    )
 
 }
 
@@ -105,6 +110,10 @@ dependencies {
     //hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+
+    //Startup
+    implementation(libs.androidx.startup)
 
     //workManager
     implementation(libs.bundles.work.manager)
