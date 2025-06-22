@@ -44,7 +44,7 @@ class OpenFacturaRepository @Inject constructor(
         sale: Sale
     ): ResultType<DocumentElectronic> {
         return makeCallNetwork {
-            val dto = sale.toElectronicInvoice(payment)
+            val dto = sale.toElectronicInvoice(payment, isLetter = false)
             val response =  openFacturaApi.generateSale(dto)
 
             eventManager.addCall {

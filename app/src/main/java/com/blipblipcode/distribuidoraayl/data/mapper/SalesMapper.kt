@@ -41,6 +41,7 @@ fun Sale.toElectronicInvoice(payment: Payment, isLetter: Boolean = true): Electr
             response = buildList {
                 add("TIMBRE")
                 add("FOLIO")
+                add("PDF")
                 add("RESOLUCION")
                 if (isLetter)
                     add("LETTER")
