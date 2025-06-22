@@ -14,10 +14,12 @@ import com.blipblipcode.distribuidoraayl.ui.customer.list.CustomerClientsScreen
 import com.blipblipcode.distribuidoraayl.ui.dawer.DistribuidoraAyLDrawer
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ProductScreen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ReportScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.SalesScreen
 import com.blipblipcode.distribuidoraayl.ui.products.add.AddProductScreen
 import com.blipblipcode.distribuidoraayl.ui.products.details.ProductDetailScreen
 import com.blipblipcode.distribuidoraayl.ui.products.list.ProductListScreen
+import com.blipblipcode.distribuidoraayl.ui.report.list.ReportSaleListScreen
 import com.blipblipcode.distribuidoraayl.ui.sales.SaleScreen
 import kotlinx.coroutines.launch
 
@@ -80,5 +82,18 @@ fun HomeNavigationHost(navHostController: NavHostController, onISignOutUseCase: 
                 navHostController.popBackStack()
             }
         }
+
+        composable<ReportScreen.List> {
+            DistribuidoraAyLDrawer(navHostController, drawerState, onISignOutUseCase) {
+                ReportSaleListScreen(drawerOpen = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }) {
+                    navHostController.navigate(it)
+                }
+            }
+        }
+
     }
 }

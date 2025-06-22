@@ -83,4 +83,8 @@
     <string name="gnerating_document">Generando Documento...</string>
     <string name="document">Documento %1$s</string>
     <string name="share">Compartir PDF</string>
+    <string name="sales">Ventas</string>
+    <string name="products">Productos</string>
+    <string name="reports">Reportes</string>
+    <string name="drawer_text_reports">Reporte de Ventas</string>
 </resources>

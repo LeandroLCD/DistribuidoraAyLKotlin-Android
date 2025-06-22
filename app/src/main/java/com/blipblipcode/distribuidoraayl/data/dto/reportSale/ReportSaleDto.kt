@@ -1,8 +1,9 @@
 package com.blipblipcode.distribuidoraayl.data.dto.reportSale
 
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ReportSaleEntity
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SaleDataEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ReportSaleEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SaleDataEntity
 import com.blipblipcode.distribuidoraayl.data.mapper.ToEntity
+import com.blipblipcode.distribuidoraayl.domain.models.sales.DteType
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
@@ -15,7 +16,7 @@ class ReportSaleDto(
     var number: Int,
     @get:PropertyName("date")
     @set:PropertyName("date")
-    var date: String,
+    var date: Long,
     @get:PropertyName("token")
     @set:PropertyName("token")
     var token: String?,
@@ -28,25 +29,34 @@ class ReportSaleDto(
     @get:PropertyName("receiver")
     @set:PropertyName("receiver")
     var receiver: ClientReceiverDto,
+    @get:PropertyName("dteType")
+    @set:PropertyName("dteType")
+    var dteType: DteType,
     @get:PropertyName("items")
     @set:PropertyName("items")
     var items: List<SalesItemsDto>,
+    @get:PropertyName("totals")
+    @set:PropertyName("totals")
+    var totals: TotalsSaleDto,
 ) :ToEntity<ReportSaleEntity>{
-    constructor(): this("", 0, "", null, null, null, ClientReceiverDto(), emptyList())
+    constructor(): this("", 0, 0L, null, null, null, ClientReceiverDto(), DteType.ORDER_NOTE, emptyList(), TotalsSaleDto())
 
     override fun mapToEntity(): ReportSaleEntity {
         return ReportSaleEntity(
             sale = SaleDataEntity(
+                uid = uid,
                 number = number,
                 clientRut = receiver.rut,
                 date = date,
                 token = token,
                 resolution = resolution?.mapToEntity(),
                 timbre = timbre,
-                isSynchronized = true
+                isSynchronized = true,
+                dteType = dteType
             ),
             items = items.map { it.mapToEntity() },
-            client = receiver.mapToEntity()
+            client = receiver.mapToEntity(),
+            totals = totals.mapToEntity()
         )
 
     }

@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.blipblipcode.distribuidoraayl.ui.customer.models.DataFilter
-import com.blipblipcode.distribuidoraayl.ui.customer.models.TypeFilter
+import com.blipblipcode.distribuidoraayl.domain.models.filters.DataFilter
+import com.blipblipcode.distribuidoraayl.domain.models.filters.TypeFilter
 
 @Composable
 fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
@@ -29,7 +29,7 @@ fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
                 Color.Blue
             }
 
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
+            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan, TypeFilter.Number.Contains -> {
                 Color.Yellow
             }
 
@@ -48,7 +48,7 @@ fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
                 Color.Black
             }
 
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
+            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan, TypeFilter.Number.Contains -> {
                 Color.Black
             }
 

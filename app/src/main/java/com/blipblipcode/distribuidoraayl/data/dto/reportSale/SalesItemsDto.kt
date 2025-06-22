@@ -1,6 +1,6 @@
 package com.blipblipcode.distribuidoraayl.data.dto.reportSale
 
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SalesItemEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SalesItemEntity
 import com.blipblipcode.distribuidoraayl.data.mapper.ToEntity
 import com.google.firebase.firestore.PropertyName
 

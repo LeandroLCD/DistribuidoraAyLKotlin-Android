@@ -1,16 +1,5 @@
-package com.blipblipcode.distribuidoraayl.ui.customer.models
-
-import androidx.compose.runtime.Stable
-
-@Stable
-data class DataFilter(val type:TypeFilter, val field:String, val value:String, val displayValue:String){
-    override fun toString(): String {
-        return "$field : $displayValue"
-    }
-}
-
-@Stable
-sealed class TypeFilter(val symbol: String) {
+package com.blipblipcode.distribuidoraayl.domain.models.filters
+sealed class TypeFilter(symbol: String) {
 
     // Filtros para texto
     sealed class Text(symbol: String) : TypeFilter(symbol) {
@@ -23,6 +12,7 @@ sealed class TypeFilter(val symbol: String) {
         data object GreaterThan : Number(">")
         data object LessThan : Number("<")
         data object Equals : Number("=")
+        data object Contains : Text("in")
     }
 
     // Filtros para fechas

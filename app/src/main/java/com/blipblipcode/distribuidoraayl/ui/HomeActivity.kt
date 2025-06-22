@@ -2,16 +2,12 @@ package com.blipblipcode.distribuidoraayl.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.rememberNavController
-import com.blipblipcode.distribuidoraayl.data.repositiry.reportSale.ReportSaleRepository
-import com.blipblipcode.distribuidoraayl.data.worker.SyncUpRepository
-import com.blipblipcode.distribuidoraayl.data.worker.SyncUpWorker
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.ISignOutUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.worker.ISyncUpRepository
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.HomeNavigationHost

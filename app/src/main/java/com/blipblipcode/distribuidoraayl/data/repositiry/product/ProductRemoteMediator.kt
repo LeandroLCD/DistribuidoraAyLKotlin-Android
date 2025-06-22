@@ -22,9 +22,9 @@ class ProductRemoteMediator @Inject constructor(
     private val database: DataBaseApp
 ): RemoteMediator() {
 
-    private val mediatorScope: CoroutineScope = CoroutineScope(dispatcher + SupervisorJob())
+    override val mediatorScope: CoroutineScope = CoroutineScope(dispatcher + SupervisorJob())
 
-    private lateinit var event: ListenerRegistration
+    override var event: ListenerRegistration? = null
 
     override fun subscribeToCollection() {
         val listener = EventListener<QuerySnapshot> { value, error ->
@@ -35,13 +35,9 @@ class ProductRemoteMediator @Inject constructor(
                 it.toObject<ProductDto>()?.mapToEntity()
             }
             if (items != null) {
-                Log.d("ProductRemoteMediator", "subscribeToCollection: $items")
                 mediatorScope.launch {
                     database.withTransaction {
-                        database.productDao().apply {
-                            deleteAll()
-                            insert(items)
-                        }
+                        database.productDao(). insert(items)
                     }
                 }
             }
@@ -50,8 +46,6 @@ class ProductRemoteMediator @Inject constructor(
     }
 
     override fun unsubscribeFromCollection() {
-        if (::event.isInitialized) {
-            event.remove()
-        }
+        event?.remove()
     }
 }

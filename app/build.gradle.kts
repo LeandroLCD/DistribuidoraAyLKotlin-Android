@@ -106,6 +106,8 @@ dependencies {
     annotationProcessor(libs.android.room.compiler)
     ksp(libs.android.room.compiler)
 
+    //paging
+    implementation(libs.bundles.paging)
 
     //hilt
     implementation(libs.bundles.hilt)

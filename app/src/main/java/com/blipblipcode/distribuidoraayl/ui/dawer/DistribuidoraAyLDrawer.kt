@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AssignmentLate
 import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
@@ -48,6 +49,7 @@ import com.blipblipcode.distribuidoraayl.ui.dawer.models.ItemDrawer
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.AuthScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ProductScreen
+import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.ReportScreen
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.Screen
 import kotlinx.coroutines.launch
 
@@ -116,6 +118,11 @@ private fun DrawerContent(
                 R.string.drawer_text_products,
                 R.drawable.ic_package
             ),
+            ItemDrawer.VectorIcon(
+                route = ReportScreen.List,
+                R.string.drawer_text_reports,
+                Icons.Default.AssignmentLate
+            )
         )
     }
 

@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
 import java.text.Normalizer
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -113,4 +114,9 @@ fun Context.readJsonFile(@RawRes rawResId: Int): String {
     return resources.openRawResource(rawResId)
         .bufferedReader()
         .use { it.readText() }
+}
+
+fun Int.toCurrency(): String {
+    val format = NumberFormat.getInstance()
+    return "${format.format(this)} $"
 }

@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import com.blipblipcode.distribuidoraayl.core.local.room.dao.ReportSaleDao
-import com.blipblipcode.distribuidoraayl.core.local.room.migrations.MigrationsFactory
+import com.blipblipcode.distribuidoraayl.core.local.room.migrations.MigrationsFactory.MIGRATION_3_4
+import com.blipblipcode.distribuidoraayl.core.local.room.migrations.MigrationsFactory.MIGRATION_4_5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,9 @@ class DatabaseModule {
             context,
             DataBaseApp::class.java,
             "distribuidoraayl.db"
-        ).addMigrations(MigrationsFactory.MIGRATION_3_4).build()
+        ).addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+            .fallbackToDestructiveMigrationOnDowngrade(true)
+            .build()
     }
 
     @Provides
