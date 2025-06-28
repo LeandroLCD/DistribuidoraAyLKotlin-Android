@@ -13,8 +13,9 @@ internal class GenerateInvoiceUseCase @Inject constructor(
 ):IGenerateInvoiceUseCase {
     override suspend fun invoke(
         payment: Payment,
-        sale: Sale
+        sale: Sale,
+        isLetter: Boolean
     ): ResultType<DocumentElectronic> {
-        return repository.generateInvoice(payment, sale)
+        return repository.generateInvoice(payment, sale, isLetter)
     }
 }

@@ -9,5 +9,9 @@ import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 interface IOpenFacturaRepository {
     suspend fun getTaxpayer(rut: String): ResultType<Taxpayer>
 
-    suspend fun generateInvoice(payment: Payment, sale: Sale): ResultType<DocumentElectronic>
+    suspend fun generateInvoice(
+        payment: Payment,
+        sale: Sale,
+        isLetter: Boolean
+    ): ResultType<DocumentElectronic>
 }
