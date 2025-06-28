@@ -341,7 +341,7 @@ fun ProductDetailScreen(
             }
 
             LoadingScreen(isLoading, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.gnerating_document))
+                Text(stringResource(R.string.generating_document))
             }
 
         }

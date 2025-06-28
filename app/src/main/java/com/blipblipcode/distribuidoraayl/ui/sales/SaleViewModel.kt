@@ -12,6 +12,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
+import com.blipblipcode.distribuidoraayl.domain.models.sales.DteType
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem
@@ -186,7 +187,8 @@ class SaleViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000L), emptyList())
 
-
+    private val _isLetter = MutableStateFlow(true)
+    val isLetter = _isLetter.asStateFlow()
 
     /*State*/
 
@@ -319,7 +321,8 @@ class SaleViewModel @Inject constructor(
         branch: Branch?,
         date: DateTime,
         eCommerce: ECommerce,
-        total: Totals
+        total: Totals,
+        isLetter: Boolean
     ) {
         viewModelScope.launch {
             val sale = Sale(
@@ -347,11 +350,12 @@ class SaleViewModel @Inject constructor(
                 },
                 totals = total
             )
-           generatePreviewUseCase.get().invoke(sale).onError {
+            generatePreviewUseCase.get().invoke(sale, isLetter).onError {
                 _errorException.tryEmit(it)
-            }.onSuccess {
-                onUiChanged(SaleUiState.PreviewSale(it, sale))
+            }.onSuccess {doc->
+                onUiChanged(SaleUiState.PreviewSale(doc))
             }
+
         }
     }
 
@@ -361,7 +365,7 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun onGenerateDte(payment: Payment, sale: Sale) {
+    fun onGenerateDte(payment: Payment, sale: Sale, isLetter: Boolean = false) {
         viewModelScope.launch {
             _isLoading.tryEmit(true)
             generateInvoiceUseCase.get().invoke(payment, sale).onError {
@@ -391,5 +395,9 @@ class SaleViewModel @Inject constructor(
             emptyMap()
         }
         clearProductSelected()
+    }
+
+    fun onLetterChanged(bool: Boolean) {
+        _isLetter.tryEmit(bool)
     }
 }

@@ -8,7 +8,10 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.Normalizer
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -113,4 +116,22 @@ fun Context.readJsonFile(@RawRes rawResId: Int): String {
     return resources.openRawResource(rawResId)
         .bufferedReader()
         .use { it.readText() }
+}
+
+fun Double.toCurrencyFormat(delimiter: Char = ' ', minFractionDigits:Int = 0, maxFractionDigits:Int = 0): String {
+    val currencyFormat = NumberFormat.getCurrencyInstance()
+    val symbol = currencyFormat.currency?.symbol.orEmpty()
+    return NumberFormat.getCurrencyInstance()
+        .apply {
+            maximumFractionDigits = maxFractionDigits
+            minimumFractionDigits = minFractionDigits
+            (this as DecimalFormat).decimalFormatSymbols =
+                DecimalFormatSymbols().apply {
+                    decimalSeparator = '.'
+                }
+
+        }
+        .format(this).run {
+            replace(symbol, "$symbol$delimiter")
+        }
 }

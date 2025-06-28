@@ -79,7 +79,7 @@ fun PdfScreen(
             LoadingScreen(isLoading.first) {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     isLoading.second?.let {
-                        Text(text = stringResource(R.string.pague, it))
+                        Text(text = stringResource(R.string.page, it))
                     }
 
                     isLoading.third?.let {
@@ -134,13 +134,13 @@ fun PdfScreen(
 @Composable
 fun PdfScreen(
     uri: Uri,
-    docNumber: Int,
+    docNumber: Long,
     onBack: () -> Unit
 ) {
 
     val context = LocalContext.current
     Scaffold(topBar = {
-        DocumentTopBar(stringResource(R.string.document, docNumber), onBack)
+        DocumentTopBar(stringResource(R.string.document, docNumber.toString()), onBack)
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
@@ -188,7 +188,7 @@ fun PdfScreen(
             LoadingScreen(isLoading.first) {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     isLoading.second?.let {
-                        Text(text = stringResource(R.string.pague, it))
+                        Text(text = stringResource(R.string.page, it))
                     }
 
                     isLoading.third?.let {

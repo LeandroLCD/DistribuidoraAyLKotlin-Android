@@ -1,14 +1,12 @@
 package com.blipblipcode.distribuidoraayl.ui.sales.models
 
-import android.net.Uri
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
-import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 
 sealed interface SaleUiState {
 
     data object NewSale: SaleUiState
 
-    data class  PreviewSale(val uri: Uri, val sale: Sale): SaleUiState
+    data class  PreviewSale(val doc: DocumentElectronic): SaleUiState
 
     data class FinishSale(val doc: DocumentElectronic): SaleUiState
 

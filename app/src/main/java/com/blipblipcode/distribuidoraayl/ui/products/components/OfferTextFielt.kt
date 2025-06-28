@@ -7,7 +7,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.ui.widgets.input.stringException
-import java.lang.Error
 
 @Composable
 fun OfferTextField(
@@ -66,7 +64,7 @@ fun OfferTextField(
               onOfferChange(it)
             })
         },
-        label = { Text(text = stringResource(R.string.offert)) },
+        label = { Text(text = stringResource(R.string.offer)) },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
