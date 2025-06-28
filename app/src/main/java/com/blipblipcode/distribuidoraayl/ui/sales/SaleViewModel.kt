@@ -12,7 +12,6 @@ import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
-import com.blipblipcode.distribuidoraayl.domain.models.sales.DteType
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem

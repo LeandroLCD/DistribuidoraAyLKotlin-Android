@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
-import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.ui.sales.preview50mm.components.Format50mmView
 import com.blipblipcode.distribuidoraayl.ui.utils.shareFileByEmail
