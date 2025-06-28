@@ -52,6 +52,9 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 #pdf
 itext7-core = { module = "com.itextpdf:itext7-core", version.ref = "itext7Core" }
 
+#print
+#printTooth = { module = "com.github.mazenrashed:Printooth", version.ref = "printToothVersion" }
+
 #compose
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }

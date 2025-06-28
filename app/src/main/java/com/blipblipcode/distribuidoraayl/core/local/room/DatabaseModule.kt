@@ -21,7 +21,8 @@ class DatabaseModule {
              context,
              DataBaseApp::class.java,
              "distribuidoraayl.db"
-         ).build()
+         ).fallbackToDestructiveMigration(true)
+             .build()
      }
 
         @Provides

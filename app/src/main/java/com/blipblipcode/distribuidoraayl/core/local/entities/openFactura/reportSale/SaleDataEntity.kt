@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class SaleDataEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val number: Int,
+    val number: Long,
     val clientRut: String,
     val date: String,
     val token: String?,
