@@ -3,7 +3,8 @@ package com.blipblipcode.distribuidoraayl.core.repository
 import com.blipblipcode.distribuidoraayl.data.repositiry.auth.AuthRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.customer.CustomerRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.of.OpenFacturaRepository
-import com.blipblipcode.distribuidoraayl.data.repositiry.pdf.PdfManagerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PdfManagerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PrinterRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.product.ProductsRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.IAuthRepository
@@ -11,6 +12,7 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerReposi
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
 import dagger.Module
 import dagger.Provides
@@ -57,6 +59,12 @@ class RepositoryModule {
     @Provides
     fun providePdfManagerRepository(pdfManagerRepository: PdfManagerRepository): IPdfManagerRepository {
         return pdfManagerRepository
+    }
+
+    @Singleton
+    @Provides
+    fun providePrinterRepository(printerRepository: PrinterRepository): IPrinterRepository {
+        return printerRepository
     }
 
 }

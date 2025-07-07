@@ -9,9 +9,11 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
+import com.blipblipcode.distribuidoraayl.domain.models.printState.PrinterState
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
+import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem
@@ -22,6 +24,7 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetRoutesUseCa
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IGenerateInvoiceUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IGeneratePreviewUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.IGetEcommerceUseCase
+import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetCategoriesUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetProductUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetProductsUseCase
@@ -53,11 +56,17 @@ class SaleViewModel @Inject constructor(
     getEcommerceUseCase: dagger.Lazy<IGetEcommerceUseCase>,
     getCategoriesUseCase: dagger.Lazy<IGetCategoriesUseCase>,
     private val getProductUseCase: dagger.Lazy<IGetProductUseCase>,
+    private val printerUseCase: dagger.Lazy<IPrinterUseCase>,
     private val generatePreviewUseCase: dagger.Lazy<IGeneratePreviewUseCase>,
     private val generateInvoiceUseCase: dagger.Lazy<IGenerateInvoiceUseCase>
 ) : ViewModel() {
     /*Event*/
 
+    val printerState = printerUseCase.get().invoke().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000L),
+        PrinterState.Idle
+    )
     private val _uiState = MutableStateFlow<SaleUiState>(SaleUiState.NewSale)
     val uiState = _uiState.asStateFlow()
 
@@ -191,6 +200,18 @@ class SaleViewModel @Inject constructor(
 
     /*State*/
 
+    fun onPrint(doc: DocumentElectronic, printer: PrinterState) {
+        when(printer){
+            PrinterState.Connected, PrinterState.Ready -> {
+                printerUseCase.get().print(doc)
+            }
+            PrinterState.Disconnected, PrinterState.Idle  -> {
+                printerUseCase.get().connect()
+            }
+            is PrinterState.Exception -> printerUseCase.get().connect()
+            else -> {}
+        }
+    }
 
     fun onDeleteProduct(uid: String) {
         card.update {
@@ -292,8 +313,8 @@ class SaleViewModel @Inject constructor(
 
     fun onAddProducts(selects: List<ProductSelected>) {
         clearProductSelected()
-        card.update {
-            val copy = it.toMutableMap()
+        card.update { card ->
+            val copy = card.toMutableMap()
             selects.forEach {
                 if (copy.containsKey(it.product.uid)) {
                     val old = copy[it.product.uid]
@@ -302,7 +323,6 @@ class SaleViewModel @Inject constructor(
                     copy[it.product.uid] = 1 to it.product.offer.isActive
                 }
             }
-
             copy.toMap()
         }
     }

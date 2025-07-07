@@ -11,7 +11,6 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.impl.GetTaxp
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IGeneratePreviewUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.impl.GeneratePreviewUseCase
 
-
 @Module
 @InstallIn(ViewModelComponent::class)
 internal abstract class OpenFacturaModule {

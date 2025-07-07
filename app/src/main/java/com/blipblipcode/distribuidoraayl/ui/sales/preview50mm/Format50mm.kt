@@ -19,16 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
+import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.models.printState.PrinterState
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.ui.sales.preview50mm.components.Format50mmView
 import com.blipblipcode.distribuidoraayl.ui.utils.shareFileByEmail
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.FabOption
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.SemicircularFabMenu
-import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.PreViewTopBar
+import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.PdfViewTopBar
 import java.io.File
 
 @Composable
 fun Format50mmPreview(
+    printerState: PrinterState,
+    onPrinter: () -> Unit,
     doc: DocumentElectronic,
     onGenerateDte: () -> Unit,
     onInsertNote: () -> Unit,
@@ -36,7 +40,11 @@ fun Format50mmPreview(
 ) {
     val context = LocalContext.current
     Scaffold(topBar = {
-        PreViewTopBar(onBack)
+        PdfViewTopBar(
+            printerSate = printerState,
+            print = onPrinter,
+            onBackPressed = onBack
+        )
     }) { innerPadding ->
         Box(
             modifier = Modifier
@@ -91,18 +99,25 @@ fun Format50mmPreview(
 
 @Composable
 fun Format50mmSale(
+    printerState: PrinterState,
     doc: DocumentElectronic,
+    onPrinter: () -> Unit,
     onBack: () -> Unit
 ) {
 
+    val context = LocalContext.current
     Scaffold(
         topBar = {
-            PreViewTopBar(onBack)
+            PdfViewTopBar(
+                printerSate = printerState,
+                print = onPrinter,
+                onBackPressed = onBack
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    /*val file = File(uri.path!!)
+                    val file = File(doc.uri.path!!)
                     val fileUri = FileProvider.getUriForFile(
                         context,
                         "${context.packageName}.provider",
@@ -111,7 +126,7 @@ fun Format50mmSale(
                     context.shareFileByEmail(
                         fileUri, title = context.getString(R.string.share),
                         typeFile = "application/pdf"
-                    )*/
+                    )
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
