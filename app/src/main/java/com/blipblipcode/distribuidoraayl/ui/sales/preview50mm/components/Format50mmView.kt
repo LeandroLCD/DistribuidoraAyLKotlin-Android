@@ -341,7 +341,7 @@ fun Format50mmView(doc: DocumentElectronic, modifier: Modifier = Modifier){
         }
 
         item{
-            Column(Modifier.fillMaxWidth()){
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center){
                 val timbreBitmap = rememberStateBase64toBitmap(doc.timbre.orEmpty())
                 timbreBitmap?.let {
                     Image(

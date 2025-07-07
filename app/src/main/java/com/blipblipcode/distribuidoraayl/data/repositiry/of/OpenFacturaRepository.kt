@@ -71,7 +71,7 @@ class OpenFacturaRepository @Inject constructor(
             }
             DocumentElectronic(
                 uri = uri,
-                number = response.number.toLong(),
+                number = response.number,
                 docType = DteType.INVOICE,
                 format = if(isLetter) DocFormat.LETTER else DocFormat.F80MM,
                 token = response.token,
