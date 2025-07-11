@@ -139,7 +139,8 @@ fun NewSaleScreen(
     Scaffold(
         topBar = {
             NewSalesTopBar(
-                date, onClickMenu = {
+                date,
+                isLetter = isLetter, onClickMenu = {
                     openDrawer.invoke()
                 },
                 onDocumentChanged = {

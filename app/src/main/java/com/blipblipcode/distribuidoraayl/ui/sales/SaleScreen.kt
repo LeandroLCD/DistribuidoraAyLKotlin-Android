@@ -33,6 +33,7 @@ fun SaleScreen(
     openDrawer: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isLetter by viewModel.isLetter.collectAsState()
     var showPayment by remember {
         mutableStateOf(false)
     }
@@ -88,7 +89,7 @@ fun SaleScreen(
                             onDismiss = {
                                 showPayment = false
                             }, onConfirm = { pay ->
-                                viewModel.onGenerateDte(pay, ui.doc.sale)
+                                viewModel.onGenerateDte(pay, ui.doc.sale, isLetter = isLetter)
                                 showPayment = false
                             })
                     }

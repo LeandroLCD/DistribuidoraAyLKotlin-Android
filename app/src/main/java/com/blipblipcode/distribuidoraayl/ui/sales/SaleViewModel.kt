@@ -1,5 +1,6 @@
 package com.blipblipcode.distribuidoraayl.ui.sales
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Activity
@@ -343,6 +344,7 @@ class SaleViewModel @Inject constructor(
         total: Totals,
         isLetter: Boolean
     ) {
+        Log.d("SaleViewModel", "onSale: $isLetter")
         viewModelScope.launch {
             val sale = Sale(
                 date = date,
@@ -371,7 +373,7 @@ class SaleViewModel @Inject constructor(
             )
             generatePreviewUseCase.get().invoke(sale, isLetter).onError {
                 _errorException.tryEmit(it)
-            }.onSuccess {doc->
+            }.onSuccess { doc ->
                 onUiChanged(SaleUiState.PreviewSale(doc))
             }
 
@@ -384,10 +386,10 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun onGenerateDte(payment: Payment, sale: Sale, isLetter: Boolean = false) {
+    fun onGenerateDte(payment: Payment, sale: Sale, isLetter: Boolean) {
         viewModelScope.launch {
             _isLoading.tryEmit(true)
-            generateInvoiceUseCase.get().invoke(payment, sale).onError {
+            generateInvoiceUseCase.get().invoke(payment, sale, isLetter).onError {
                 _errorException.tryEmit(it)
             }.onSuccess {
                 clearSale()
@@ -417,6 +419,7 @@ class SaleViewModel @Inject constructor(
     }
 
     fun onLetterChanged(bool: Boolean) {
+        Log.d("SaleViewModel", "onLetterChanged: $bool")
         _isLetter.tryEmit(bool)
     }
 }
