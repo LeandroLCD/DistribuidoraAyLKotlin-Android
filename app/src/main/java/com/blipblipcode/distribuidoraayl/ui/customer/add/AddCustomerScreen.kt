@@ -382,7 +382,12 @@ fun AddCustomerScreen(
 
             }
         }
-        LoadingScreen(isLoading, Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)))
+        LoadingScreen(
+            isLoading,
+            Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f))
+        ) {
+            Text(stringResource(R.string.generating_document))
+        }
 
     }
 }

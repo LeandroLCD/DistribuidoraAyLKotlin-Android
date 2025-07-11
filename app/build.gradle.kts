@@ -12,7 +12,7 @@ plugins {
 
 android {
     namespace = "com.blipblipcode.distribuidoraayl"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.blipblipcode.distribuidoraayl"
@@ -53,9 +53,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.androidx.livedata)
+    implementation(libs.kotlin.reflect)
 
     //Preferences
     implementation(libs.androidx.preference.ktx)
+    implementation(libs.datastore)
 
     //camera
     implementation(libs.bundles.cameraX)
@@ -63,6 +65,12 @@ dependencies {
     //compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.androidx.compose)
+
+    //pdf
+    implementation(libs.itext7.core)
+
+    //print
+    implementation(libs.termalPrinter)
 
     //navigation
     implementation(libs.bundles.compose.navigation)
@@ -74,6 +82,9 @@ dependencies {
 
     //dateTime
     implementation(libs.bundles.dateTime)
+
+    //barcode
+    implementation(libs.barcode.scanner)
 
     //network
     implementation(libs.bundles.network)
@@ -105,4 +116,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("reflect"))
 }

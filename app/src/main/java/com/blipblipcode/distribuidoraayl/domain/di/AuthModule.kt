@@ -14,8 +14,10 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.auth.impl.SignOutUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.impl.VerifiedEmailUseCase
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -36,7 +38,15 @@ internal abstract class AuthModule {
     @Binds
     abstract fun bindVerifiedEmailUseCase(impl: VerifiedEmailUseCase): IVerifiedEmailUseCase
 
-    @Binds
-    abstract fun bindSignOutUseCase(impl: SignOutUseCase): ISignOutUseCase
 
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal object SignOutModule{
+
+    @Provides
+    internal fun bindSignOutUseCase(impl: SignOutUseCase): ISignOutUseCase{
+        return impl
+    }
 }

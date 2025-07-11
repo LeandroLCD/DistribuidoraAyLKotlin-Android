@@ -1,8 +1,6 @@
 package com.blipblipcode.distribuidoraayl.ui.customer.list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,10 +54,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
-import com.blipblipcode.distribuidoraayl.ui.customer.models.DataFilter
-import com.blipblipcode.distribuidoraayl.ui.customer.models.TypeFilter
 import com.blipblipcode.distribuidoraayl.ui.navigationGraph.routes.CustomerScreen
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.ButtonRedAyL
+import com.blipblipcode.distribuidoraayl.ui.widgets.input.ItemFilter
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.SwipeMenuItem
 import com.blipblipcode.distribuidoraayl.ui.widgets.swipe.rememberSwipeMenuState
 import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.CustomerClientTopBar
@@ -73,8 +69,10 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun CustomerClientsScreen(
+    drawerOpen:()->Unit,
     viewModel: CustomerListViewModel = hiltViewModel(),
-    onNavigateTo:(CustomerScreen)->Unit) {
+    onNavigateTo: (CustomerScreen) -> Unit
+) {
     val customers by viewModel.customers.collectAsState()
     var isVisible by remember {
         mutableStateOf(false)
@@ -82,7 +80,7 @@ fun CustomerClientsScreen(
     Scaffold(
         topBar = {
             CustomerClientTopBar(onClickMenu = {
-                /*TODO open drawer*/
+                drawerOpen.invoke()
             },
                 onAddRoute = {
                     isVisible = true
@@ -114,19 +112,20 @@ fun CustomerClientsScreen(
             stickyHeader {
                 FlowRow(maxLines = 2) {
                     filters.forEach {
-                        ItemFilter(it) {
-                            /*Todo Delete filter*/
+                        ItemFilter(it){ f->
+                            viewModel.onDeleteFilter(f)
                         }
                     }
-
                 }
             }
             items(customers, key = { it.rut }) {
-                ItemHolder(it, onEdit = {customer->
+                ItemCustomerHolder(it,
+                    modifier = Modifier.height(76.dp),
+                    onEdit = { customer ->
                     onNavigateTo.invoke(CustomerScreen.Detail(customer.rut, true))
-                }, onDelete = {customer->
+                }, onDelete = { customer ->
                     viewModel.onDeleteCustomer(customer)
-                }) {customer->
+                }) { customer ->
                     onNavigateTo.invoke(CustomerScreen.Detail(customer.rut))
                 }
             }
@@ -187,74 +186,16 @@ fun CustomerClientsScreen(
 }
 
 @Composable
-fun ItemFilter(dataFilter: DataFilter, onDelete: (DataFilter) -> Unit) {
-    val transition = updateTransition(dataFilter.type, label = "updateTransition")
-    val color = transition.animateColor(label = "color") {
-        when (it) {
-            TypeFilter.Boolean.Equals -> {
-                Color.Green
-            }
-
-            TypeFilter.Date.Between, TypeFilter.Date.Equals, TypeFilter.Date.GreaterThan, TypeFilter.Date.LessThan -> {
-                Color.Blue
-            }
-
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
-                Color.Yellow
-            }
-
-            TypeFilter.Text.Equals, TypeFilter.Text.Contains -> {
-                Color.Red
-            }
-        }
-    }
-    val contentColor = transition.animateColor(label = "color") {
-        when (it) {
-            TypeFilter.Boolean.Equals -> {
-                Color.White
-            }
-
-            TypeFilter.Date.Between, TypeFilter.Date.Equals, TypeFilter.Date.GreaterThan, TypeFilter.Date.LessThan -> {
-                Color.Black
-            }
-
-            TypeFilter.Number.Equals, TypeFilter.Number.GreaterThan, TypeFilter.Number.LessThan -> {
-                Color.Black
-            }
-
-            TypeFilter.Text.Equals, TypeFilter.Text.Contains -> {
-                Color.White
-            }
-        }
-    }
-    Surface(
-        color = color.value,
-        contentColor = contentColor.value,
-        onClick = {
-            onDelete.invoke(dataFilter)
-        },
-        tonalElevation = 8.dp,
-        shape = CircleShape
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp, 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(dataFilter.toString(), fontSize = 12.sp)
-        }
-    }
-}
-
-@Composable
-fun ItemHolder(
+fun ItemCustomerHolder(
     customer: Customer,
+    modifier: Modifier = Modifier,
     onEdit: (Customer) -> Unit,
     onDelete: (Customer) -> Unit,
     onSelected: (Customer) -> Unit
 ) {
     val state = rememberSwipeMenuState()
     val scope = rememberCoroutineScope()
-    SwipeMenuItem(state, contentMenu = {
+    SwipeMenuItem(state, modifier.fillMaxWidth(), contentMenu = {
         Row {
             IconButton(
                 colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Blue),
@@ -289,7 +230,6 @@ fun ItemHolder(
             tonalElevation = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
         ) {
             Row(
                 Modifier
@@ -298,9 +238,17 @@ fun ItemHolder(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(text = customer.companyName, fontSize = 22.sp)
-                    Text(text = customer.rut, fontSize = 22.sp)
-                    Text(text = customer.phone, fontSize = 22.sp)
+                    Text(text = customer.companyName, fontSize = 16.sp, maxLines = 1)
+                    Row(
+                        Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Rut: ${customer.rut}", fontSize = 12.sp)
+                        if(customer.phone.length > 7){
+                            Text(text = "Tlf: ${customer.phone}", fontSize = 12.sp)
+                        }
+                    }
                 }
             }
         }

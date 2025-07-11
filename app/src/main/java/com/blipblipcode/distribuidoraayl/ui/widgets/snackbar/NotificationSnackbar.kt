@@ -13,6 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,10 +26,16 @@ import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.ButtonRedAyL
 fun NotificationSnackbar(
     state: SnackbarHostState,
     modifier: Modifier = Modifier,
+    onDismiss: (() -> Unit)? = null,
     onRetry: (() -> Unit)? = null
 ) {
 
     SnackbarHost(hostState = state, modifier = modifier){data->
+        DisposableEffect(Unit) {
+            onDispose {
+                onDismiss?.invoke()
+            }
+        }
         Surface(
             shadowElevation = 8.dp,
             shape = CircleShape,

@@ -5,5 +5,4 @@ import com.blipblipcode.distribuidoraayl.domain.models.of.Taxpayer
 
 interface IGetTaxpayerUseCase {
     suspend operator fun invoke(rut: String): ResultType<Taxpayer>
-
 }

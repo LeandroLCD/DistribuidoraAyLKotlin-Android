@@ -23,7 +23,7 @@ fun PhoneTextField(
         onValueChange = {
             onValueChange(it)
         },
-        label = { Text(text = stringResource(R.string.company_name)) },
+        label = { Text(text = stringResource(R.string.phone)) },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,

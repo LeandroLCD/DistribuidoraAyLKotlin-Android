@@ -3,11 +3,17 @@ package com.blipblipcode.distribuidoraayl.core.repository
 import com.blipblipcode.distribuidoraayl.data.repositiry.auth.AuthRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.customer.CustomerRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.of.OpenFacturaRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PdfManagerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PrinterRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.product.ProductsRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.auth.IAuthRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,6 +47,24 @@ class RepositoryModule {
     @Provides
     fun provideSystemPreferencesRepository(systemPreferencesRepository: SystemPreferencesRepository): ISystemPreferencesRepository {
         return systemPreferencesRepository
+    }
+
+    @Singleton
+    @Provides
+    fun provideProductRepository(productRepository: ProductsRepository): IProductsRepository {
+        return productRepository
+    }
+
+    @Singleton
+    @Provides
+    fun providePdfManagerRepository(pdfManagerRepository: PdfManagerRepository): IPdfManagerRepository {
+        return pdfManagerRepository
+    }
+
+    @Singleton
+    @Provides
+    fun providePrinterRepository(printerRepository: PrinterRepository): IPrinterRepository {
+        return printerRepository
     }
 
 }

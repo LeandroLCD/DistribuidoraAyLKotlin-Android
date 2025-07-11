@@ -5,6 +5,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +21,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.blipblipcode.distribuidoraayl.R
 
 @Composable
-fun LoadingScreen(isLoading: Boolean, modifier: Modifier = Modifier) {
+fun LoadingScreen(isLoading: Boolean, modifier: Modifier = Modifier, content: @Composable () -> Unit = {}) {
     AnimatedVisibility(isLoading,
         enter = scaleIn(),
         exit = scaleOut(),
@@ -29,19 +30,24 @@ fun LoadingScreen(isLoading: Boolean, modifier: Modifier = Modifier) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
 
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(contentAlignment = Alignment.Center) {
+                    LottieAnimation(
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever,
+                        modifier = Modifier.size(200.dp),
+                        contentScale = ContentScale.Crop,
+                    )
 
-            LottieAnimation(
-                composition = composition,
-                iterations = LottieConstants.IterateForever,
-                modifier = Modifier.size(200.dp),
-                contentScale = ContentScale.Crop,
-            )
+                    Image(
+                        painter = painterResource(R.drawable.ic_logo),
+                        contentDescription = "logo",
+                        modifier = Modifier.size(50.dp)
+                    )
+                }
+                content()
+            }
 
-            Image(
-                painter = painterResource(R.drawable.ic_logo),
-                contentDescription = "logo",
-                modifier = Modifier.size(50.dp)
-            )
         }
     }
 }
