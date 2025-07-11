@@ -202,15 +202,21 @@ class SaleViewModel @Inject constructor(
     /*State*/
 
     fun onPrint(doc: DocumentElectronic, printer: PrinterState) {
-        when(printer){
-            PrinterState.Connected, PrinterState.Ready -> {
-                printerUseCase.get().print(doc)
+        viewModelScope.launch {
+            when(printer){
+                PrinterState.Connected, PrinterState.Ready -> {
+                    _isLoading.tryEmit(true)
+                    printerUseCase.get().print(doc)
+                    _isLoading.tryEmit(false)
+                }
+                PrinterState.Disconnected, PrinterState.Idle  -> {
+                    _isLoading.tryEmit(true)
+                    printerUseCase.get().connect()
+                    _isLoading.tryEmit(false)
+                }
+                is PrinterState.Exception -> printerUseCase.get().connect()
+                else -> {}
             }
-            PrinterState.Disconnected, PrinterState.Idle  -> {
-                printerUseCase.get().connect()
-            }
-            is PrinterState.Exception -> printerUseCase.get().connect()
-            else -> {}
         }
     }
 

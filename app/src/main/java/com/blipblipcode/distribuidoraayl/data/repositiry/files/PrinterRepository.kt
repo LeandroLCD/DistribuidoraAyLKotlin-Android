@@ -13,6 +13,9 @@ import androidx.core.graphics.createBitmap
 import androidx.core.graphics.get
 import androidx.core.graphics.scale
 import androidx.core.graphics.set
+import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
+import com.blipblipcode.distribuidoraayl.domain.models.ResultType
+import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.printState.PrinterState
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DteType
@@ -25,14 +28,17 @@ import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.dantsu.escposprinter.textparser.PrinterTextParserImg
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 class PrinterRepository @Inject constructor(
+    dispatcher: CoroutineDispatcher,
     context: Context
-) : IPrinterRepository {
+) : IPrinterRepository, BaseRepository(dispatcher, context) {
     private val _printerState = MutableSharedFlow<PrinterState>(replay = 1, extraBufferCapacity = 1)
 
     override val printerState = _printerState.asSharedFlow()
@@ -42,14 +48,14 @@ class PrinterRepository @Inject constructor(
     private val _broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                BluetoothDevice.ACTION_ACL_CONNECTED -> {
+                /*BluetoothDevice.ACTION_ACL_CONNECTED -> {
                     val device =
                         intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    if (device != null) {
-                        Log.d("Bluetooth", "Connected is connect")
-                        _printerState.tryEmit(PrinterState.Connected)
+                    if (device != null && device.address == connection.device?.address) {
+                        Log.d("Bluetooth", "Connected is connect ${device.address}")
+                        //_printerState.tryEmit(PrinterState.Connected)
                     }
-                }
+                }*/
 
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                     Log.d("Bluetooth", "Connected is disconect")
@@ -86,23 +92,24 @@ class PrinterRepository @Inject constructor(
         context.registerReceiver(_broadcastReceiver, filter)
     }
 
-    override fun connect(): Boolean {
-        return try {
+    override suspend fun connect(): ResultType<Unit> {
+        return makeCallDatabase {
             if (!::connection.isInitialized || !connection.isConnected) {
                 connection = BluetoothPrintersConnections.selectFirstPaired()!!
                 printer = EscPosPrinter(
                     connection,
                     203,
-                    50f,
+                    48f,
                     32,
                     EscPosCharsetEncoding("windows-1252", 16)
                 )
             }
-            _printerState.tryEmit(PrinterState.Connected)
-        } catch (e: Exception) {
-            _printerState.tryEmit(PrinterState.Exception(e))
-            false
+
+            _printerState.emit(PrinterState.Connected)
+        }.onError {
+            _printerState.tryEmit(PrinterState.Exception(it))
         }
+
     }
 
     override fun disconnect() {
@@ -110,9 +117,10 @@ class PrinterRepository @Inject constructor(
         _printerState.tryEmit(PrinterState.Disconnected)
     }
 
-    override fun print(document: DocumentElectronic) {
+    override suspend fun print(document: DocumentElectronic):ResultType<Unit> = makeCallDatabase {
 
         _printerState.tryEmit(PrinterState.Printing)
+
 
         val printText = StringBuilder()
 
@@ -166,7 +174,7 @@ class PrinterRepository @Inject constructor(
           printText.append("[C]________________________________\n")
 
 
-        // Si es factura y tiene timbre fiscal
+        // Si es dte y tiene timbre fiscal
         if (document.docType != DteType.ORDER_NOTE && !document.timbre.isNullOrEmpty()) {
             val bitmap = document.timbre.toBitmap()!!
             val hasTransparency = bitmap.hasAlpha()
@@ -179,7 +187,7 @@ class PrinterRepository @Inject constructor(
                 BitmapUtil.convertToMonochrome(processedBitmap)
             }
             val timbreHex =
-                PrinterTextParserImg.bitmapToHexadecimalString(printer, monochromeBitmap, false)
+                PrinterTextParserImg.bitmapToHexadecimalString(printer, monochromeBitmap)
 
 
             timbreHex?.let {
@@ -192,19 +200,10 @@ class PrinterRepository @Inject constructor(
         } else {
             printText.append("[C]SIN VALIDEZ TRIBUTARIA\n")
         }
-        try {
-            printer.printFormattedText(printText.toString())
-            /*document.timbre?.let {base64String->
-                val cmdImg  = generatePDF417Command(base64String, maxWidth = 384, mode = 0)
-
-                connection.write(cmdImg)
-                connection.send()
-            }*/
-            _printerState.tryEmit(PrinterState.Ready)
-
-        } catch (e: Exception) {
-            _printerState.tryEmit(PrinterState.Exception(e))
-        }
+        printer.printFormattedText(printText.toString())
+        _printerState.emit(PrinterState.Ready)
+    }.onError {
+        _printerState.tryEmit(PrinterState.Exception(it))
     }
 
 }
