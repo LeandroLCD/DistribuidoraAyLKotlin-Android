@@ -18,6 +18,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DteType
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterRepository
+import com.blipblipcode.distribuidoraayl.ui.utils.BitmapUtil
 import com.blipblipcode.distribuidoraayl.ui.utils.toBitmap
 import com.dantsu.escposprinter.EscPosCharsetEncoding
 import com.dantsu.escposprinter.EscPosPrinter
@@ -92,7 +93,7 @@ class PrinterRepository @Inject constructor(
                 printer = EscPosPrinter(
                     connection,
                     203,
-                    48f,
+                    50f,
                     32,
                     EscPosCharsetEncoding("windows-1252", 16)
                 )
@@ -106,6 +107,7 @@ class PrinterRepository @Inject constructor(
 
     override fun disconnect() {
         printer.disconnectPrinter()
+        _printerState.tryEmit(PrinterState.Disconnected)
     }
 
     override fun print(document: DocumentElectronic) {
@@ -164,8 +166,8 @@ class PrinterRepository @Inject constructor(
           printText.append("[C]________________________________\n")
 
 
-        // Si es factura y tiene timbre fiscal document.docType != DteType.ORDER_NOTE &&
-        if (!document.timbre.isNullOrEmpty()) {
+        // Si es factura y tiene timbre fiscal
+        if (document.docType != DteType.ORDER_NOTE && !document.timbre.isNullOrEmpty()) {
             val bitmap = document.timbre.toBitmap()!!
             val hasTransparency = bitmap.hasAlpha()
 
@@ -205,277 +207,6 @@ class PrinterRepository @Inject constructor(
         }
     }
 
-
-    /**
-     */
-    fun generatePDF417Command(
-        base64String: String,
-        maxWidth: Int = 384,
-        mode: Int = 0
-    ): ByteArray? {
-        val bitmap = base64String.toBitmap() ?: return null
-
-        // Verificar si la imagen tiene transparencia
-        val hasTransparency = bitmap.hasAlpha()
-
-        // Procesar la imagen
-        val processedBitmap = BitmapUtil.resizeBitmapIfNeeded(bitmap, maxWidth)
-        val monochromeBitmap = if (hasTransparency) {
-            BitmapUtil.convertToMonochromeWithTransparency(processedBitmap)
-        } else {
-            BitmapUtil.convertToMonochrome(processedBitmap)
-        }
-
-        val imageData = BitmapUtil.convertBitmapToByteArray(monochromeBitmap)
-
-        return generateRasterBitmapCommand(
-            width = monochromeBitmap.width,
-            height = monochromeBitmap.height,
-            mode = mode,
-            imageData = imageData
-        )
-    }
-
-
-    private fun generateRasterBitmapCommand(
-        width: Int,
-        height: Int,
-        mode: Int = 0, // 0=Normal, 1=Double-width, 2=Double-height, 3=Quadruple
-        imageData: ByteArray
-    ): ByteArray {
-        // Calcular xL, xH (ancho en bytes)
-        val widthBytes = (width + 7) / 8 // Redondear hacia arriba
-        val xL = widthBytes and 0xFF
-        val xH = (widthBytes shr 8) and 0xFF
-
-        // Calcular yL, yH (alto en líneas)
-        val yL = height and 0xFF
-        val yH = (height shr 8) and 0xFF
-
-        // Crear comando: GS v 0 m xL xH yL yH d1...dk
-        val commandSize = 8 + imageData.size
-        val command = ByteArray(commandSize)
-
-        // Cabecera del comando GS v 0
-        command[0] = 0x1D.toByte() // GS
-        command[1] = 0x76.toByte() // v
-        command[2] = 0x30.toByte() // 0
-        command[3] = mode.toByte() // m (modo)
-        command[4] = xL.toByte()   // xL
-        command[5] = xH.toByte()   // xH
-        command[6] = yL.toByte()   // yL
-        command[7] = yH.toByte()   // yH
-
-        // Copiar datos de imagen
-        System.arraycopy(imageData, 0, command, 8, imageData.size)
-
-        return command
-    }
-
-
-
 }
 
-object BitmapUtil {
-    /**
-     * Función de debug específica para analizar transparencia
-     */
-    fun debugBitmapInfo(bitmap: Bitmap): String {
-        val width = bitmap.width
-        val height = bitmap.height
-
-        var transparentPixels = 0
-        var opaqueBlackPixels = 0
-        var opaqueWhitePixels = 0
-        var opaqueOtherPixels = 0
-
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val pixel = bitmap[x, y]
-                val alpha = Color.alpha(pixel)
-
-                if (alpha < 128) {
-                    transparentPixels++
-                } else {
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-
-                    when {
-                        red == 0 && green == 0 && blue == 0 -> opaqueBlackPixels++
-                        red == 255 && green == 255 && blue == 255 -> opaqueWhitePixels++
-                        else -> opaqueOtherPixels++
-                    }
-                }
-            }
-        }
-
-        val totalPixels = width * height
-
-        return """
-        Análisis de Transparencia:
-        - Dimensiones: ${width}x${height}
-        - Total píxeles: $totalPixels
-        - Píxeles transparentes: $transparentPixels (${(transparentPixels * 100f / totalPixels).toInt()}%)
-        - Píxeles opacos negros: $opaqueBlackPixels (${(opaqueBlackPixels * 100f / totalPixels).toInt()}%)
-        - Píxeles opacos blancos: $opaqueWhitePixels (${(opaqueWhitePixels * 100f / totalPixels).toInt()}%)
-        - Píxeles opacos otros colores: $opaqueOtherPixels (${(opaqueOtherPixels * 100f / totalPixels).toInt()}%)
-        - Config: ${bitmap.config}
-        - Has Alpha: ${bitmap.hasAlpha()}
-    """.trimIndent()
-    }
-
-    /**
-     * Convierte el bitmap a monocromo (blanco y negro)
-     * Corregido para manejar correctamente códigos PDF417 y QR con transparencia
-     */
-    fun convertToMonochrome(bitmap: Bitmap): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
-        val monochromeBitmap = createBitmap(width, height, Bitmap.Config.RGB_565)
-
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                val pixel = bitmap[x, y]
-
-                // Extraer valores RGB y Alpha
-                val red = Color.red(pixel)
-                val green = Color.green(pixel)
-                val blue = Color.blue(pixel)
-                val alpha = Color.alpha(pixel)
-
-                // Para códigos PDF417/QR con transparencia:
-                // - Píxeles transparentes (alpha < 128) = fondo blanco
-                // - Píxeles no transparentes con color oscuro = datos negros
-                if (alpha < 128) {
-                    // Píxel transparente = fondo blanco
-                    monochromeBitmap[x, y] = Color.WHITE
-                } else {
-                    // Píxel no transparente - evaluar si es negro o blanco
-                    // Calcular luminancia usando la fórmula estándar
-                    val luminance = (0.299 * red + 0.587 * green + 0.114 * blue).toInt()
-
-                    // Para códigos de barras, usar umbral más sensible
-                    val threshold = 128
-                    val bwPixel = if (luminance < threshold) Color.BLACK else Color.WHITE
-
-                    monochromeBitmap[x, y] = bwPixel
-                }
-            }
-        }
-
-        return monochromeBitmap
-    }
-
-    /**
-     * Convierte el bitmap monocromo a array de bytes para la impresora
-     * Cada byte representa 8 píxeles horizontales
-     */
-    fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val width = bitmap.width
-        val height = bitmap.height
-
-        // Calcular el ancho en bytes (cada byte = 8 píxeles)
-        val widthBytes = (width + 7) / 8
-        val dataSize = widthBytes * height
-        val data = ByteArray(dataSize)
-
-        var dataIndex = 0
-
-        for (y in 0 until height) {
-            for (x in 0 until widthBytes) {
-                var byteValue = 0
-
-                // Procesar 8 píxeles por byte
-                for (bit in 0 until 8) {
-                    val pixelX = x * 8 + bit
-
-                    if (pixelX < width) {
-                        val pixel = bitmap[pixelX, y]
-
-                        // Verificar si el pixel es negro
-                        // Para QR codes, generalmente los píxeles negros tienen valores RGB bajos
-                        val isBlack = when {
-                            pixel == Color.BLACK -> true
-                            pixel == Color.WHITE -> false
-                            else -> {
-                                // Calcular luminancia para píxeles con color
-                                val red = Color.red(pixel)
-                                val green = Color.green(pixel)
-                                val blue = Color.blue(pixel)
-                                val luminance = (0.299 * red + 0.587 * green + 0.114 * blue).toInt()
-                                luminance < 128 // Umbral para determinar si es negro
-                            }
-                        }
-
-                        if (isBlack) {
-                            // Bit 1 = píxel negro, bit 0 = píxel blanco
-                            byteValue = byteValue or (1 shl (7 - bit))
-                        }
-                    }
-                    // Si pixelX >= width, el bit queda en 0 (blanco)
-                }
-
-                data[dataIndex++] = byteValue.toByte()
-            }
-        }
-
-        return data
-    }
-
-    /**
-     * Función específica para manejar imágenes con transparencia
-     * Optimizada para códigos PDF417 y QR
-     */
-    fun convertToMonochromeWithTransparency(bitmap: Bitmap): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
-        val monochromeBitmap = createBitmap(width, height, Bitmap.Config.RGB_565)
-
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                val pixel = bitmap[x, y]
-                val alpha = Color.alpha(pixel)
-
-                if (alpha < 128) {
-                    // Píxel transparente = fondo blanco
-                    monochromeBitmap[x, y] = Color.WHITE
-                } else {
-                    // Píxel no transparente
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-
-                    // Para códigos de barras, los píxeles no transparentes
-                    // generalmente representan los datos (negro)
-                    // Pero verificamos por si acaso hay píxeles blancos no transparentes
-
-                    if (red == 255 && green == 255 && blue == 255) {
-                        // Píxel blanco no transparente
-                        monochromeBitmap[x, y] = Color.WHITE
-                    } else {
-                        // Cualquier otro color no transparente se considera negro
-                        monochromeBitmap[x, y] = Color.BLACK
-                    }
-                }
-            }
-        }
-
-        return monochromeBitmap
-    }
-
-    /**
-     * Redimensiona el bitmap si excede el ancho máximo, manteniendo la proporción
-     */
-    fun resizeBitmapIfNeeded(bitmap: Bitmap, maxWidth: Int): Bitmap {
-        return if (bitmap.width > maxWidth) {
-            val aspectRatio = bitmap.height.toFloat() / bitmap.width.toFloat()
-            val newHeight = (maxWidth * aspectRatio).toInt()
-            bitmap.scale(maxWidth, newHeight)
-        } else {
-            bitmap
-        }
-    }
-
-}
 
