@@ -44,7 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.ui.products.components.AddCategoryDialog
 import com.blipblipcode.distribuidoraayl.ui.products.components.BarCodeSKUTextField
