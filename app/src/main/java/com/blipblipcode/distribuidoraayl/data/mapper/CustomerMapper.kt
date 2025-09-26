@@ -1,0 +1,65 @@
+package com.blipblipcode.distribuidoraayl.data.mapper
+
+import com.blipblipcode.distribuidoraayl.data.dto.customer.ActivityDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.BranchDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.CustomerDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RouteDto
+import com.blipblipcode.distribuidoraayl.data.dto.customer.RubroDto
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Activity
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Branch
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Rubro
+
+
+fun Route.toDto(): RouteDto {
+    return RouteDto(
+        uid = uid,
+        name = name
+    )
+}
+fun Customer.toDto(): CustomerDto {
+    return CustomerDto(
+        commune = commune,
+        address = address,
+        activities = activities?.map { it.toDto() },
+        branches = branches?.map { it.toDto() },
+        companyName = companyName,
+        country = country,
+        phone = phone,
+        registrationDate = registrationDate,
+        birthDate = birthDate,
+        regionId = regionId,
+        rut = rut,
+        rutCode = rutCode,
+        routeId = routeId,
+        rubro = rubro.toDto()
+    )
+
+}
+fun Rubro.toDto(): RubroDto {
+    return RubroDto(
+        id = id,
+        soc = soc,
+        description = description
+    )
+}
+
+private fun Activity.toDto(): ActivityDto {
+    return ActivityDto(
+        turn = turn,
+        code = code,
+        name = name,
+        isMainActivity = isMainActivity
+    )
+}
+private fun Branch.toDto(): BranchDto {
+    return BranchDto(
+        city = city,
+        code = code,
+        commune = commune,
+        address = address,
+        phone = phone.orEmpty(),
+        isHouseMatrix = isHouseMatrix
+    )
+}

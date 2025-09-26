@@ -1,0 +1,12 @@
+{
+    "error": {
+        "message": "Validación de Campos",
+        "code": "OF-10",
+        "details": [
+            {
+                "field": "Error",
+                "issue": "Rut Incorrecto"
+            }
+        ]
+    }
+}

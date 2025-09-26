@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,12 +14,12 @@ plugins {
 
 android {
     namespace = "com.blipblipcode.distribuidoraayl"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.blipblipcode.distribuidoraayl"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
 
@@ -37,13 +39,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+            freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+        }
     }
     buildFeatures {
         compose = true
     }
-    packagingOptions.resources.excludes.addAll(listOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/gradle/incremental.annotation.processors") )
+    packagingOptions.resources.excludes.addAll(
+        listOf(
+            "/META-INF/{AL2.0,LGPL2.1}",
+            "META-INF/gradle/incremental.annotation.processors"
+        )
+    )
 
 }
 
@@ -53,6 +63,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.androidx.livedata)
+    implementation(libs.kotlin.reflect)
+
+    //Preferences
+    implementation(libs.androidx.preference.ktx)
+    implementation(libs.datastore)
 
     //camera
     implementation(libs.bundles.cameraX)
@@ -61,11 +76,25 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.androidx.compose)
 
+    //pdf
+    implementation(libs.itext7.core)
+
+    //print
+    implementation(libs.termalPrinter)
+
     //navigation
     implementation(libs.bundles.compose.navigation)
 
     //ui
     implementation(libs.bundles.androidx.uiMaterial)
+    implementation(libs.lottie.compose)
+    implementation(libs.form.builder)
+
+    //dateTime
+    implementation(libs.bundles.dateTime)
+
+    //barcode
+    implementation(libs.barcode.scanner)
 
     //network
     implementation(libs.bundles.network)
@@ -73,22 +102,31 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.interceptor)
 
-    //fireBase
+    //firebase
     implementation(platform(libs.firebase.boom))
     implementation(libs.bundles.firebase)
 
     //playService
     implementation(libs.bundles.play.service)
 
-    //Room
+    //room
     implementation(libs.bundles.room)
     annotationProcessor(libs.android.room.compiler)
     ksp(libs.android.room.compiler)
 
+    //paging
+    implementation(libs.bundles.paging)
 
     //hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+
+    //Startup
+    implementation(libs.androidx.startup)
+
+    //workManager
+    implementation(libs.bundles.work.manager)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -97,4 +135,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("reflect"))
 }
