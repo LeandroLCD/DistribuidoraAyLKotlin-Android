@@ -1,6 +1,14 @@
 # 📱 DistribuidoraAyL
 
-Aplicación Android desarrollada en **Kotlin** con un enfoque moderno, basada en **Jetpack Compose** para la interfaz de usuario, arquitectura limpia (UI–Domain–Data) y con inyección de dependencias mediante **Hilt**. Diseñada para ser escalable, mantenible y aprovechar las últimas tecnologías del ecosistema Jetpack.
+Aplicación Android desarrollada en Kotlin, con un enfoque moderno que combina Jetpack Compose para la interfaz de usuario, Clean Architecture (UI–Domain–Data) junto con el patrón MVVM, e inyección de dependencias con Hilt. El objetivo es garantizar un código escalable, mantenible y robusto, aprovechando al máximo las últimas tecnologías del ecosistema Jetpack.
+
+Más allá de lo técnico, esta app nace para resolver un problema real de negocio: es una herramienta móvil de gestión tipo punto de venta, diseñada para la venta y distribución de productos —en este caso, helados. La aplicación agiliza el proceso comercial al permitir:
+
+- **Generar facturas de manera rápida y segura.**
+- **Escanear códigos de barras para identificar productos.**
+- **Imprimir comprobantes y documentos en campo.**
+
+Con estas funcionalidades, se convierte en una solución práctica y eficiente para vendedores y distribuidores móviles que buscan optimizar sus operaciones diarias.
 
 ---
 
