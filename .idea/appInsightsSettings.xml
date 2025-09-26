@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AppInsightsSettings">
+    <option name="selectedTabId" value="Firebase Crashlytics" />
     <option name="tabSettings">
       <map>
         <entry key="Android Vitals">
@@ -23,9 +24,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.blipblipcode.distribuidoraayl" />
-                  <option name="mobileSdkAppId" value="1:380923500055:android:5a6e16b46a92de476e6e52" />
-                  <option name="projectId" value="distribuidoraayl-kotlin" />
-                  <option name="projectNumber" value="380923500055" />
+                  <option name="mobileSdkAppId" value="1:33554702688:android:85c155c4918c6599587e05" />
+                  <option name="projectId" value="puntodeventademo-4332d" />
+                  <option name="projectNumber" value="33554702688" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

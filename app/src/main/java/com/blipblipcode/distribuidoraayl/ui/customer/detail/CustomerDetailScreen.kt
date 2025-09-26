@@ -1,0 +1,451 @@
+package com.blipblipcode.distribuidoraayl.ui.customer.detail
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.models.customer.Customer
+import com.blipblipcode.distribuidoraayl.ui.customer.components.AddressTextField
+import com.blipblipcode.distribuidoraayl.ui.customer.components.BirthDateTextField
+import com.blipblipcode.distribuidoraayl.ui.customer.components.CompanyTextField
+import com.blipblipcode.distribuidoraayl.ui.customer.components.ItemHolderActivity
+import com.blipblipcode.distribuidoraayl.ui.customer.components.ItemHolderBranch
+import com.blipblipcode.distribuidoraayl.ui.customer.components.PhoneTextField
+import com.blipblipcode.distribuidoraayl.ui.customer.components.RutTextField
+import com.blipblipcode.distribuidoraayl.ui.utils.removeAccents
+import com.blipblipcode.distribuidoraayl.ui.widgets.carousel.CarouselView
+import com.blipblipcode.distribuidoraayl.ui.widgets.choices.FieldChoice
+import com.blipblipcode.distribuidoraayl.ui.widgets.choices.OptionsSelector
+import com.blipblipcode.distribuidoraayl.ui.widgets.input.getString
+import com.blipblipcode.distribuidoraayl.ui.widgets.loading.LoadingScreen
+import com.blipblipcode.distribuidoraayl.ui.widgets.snackbar.NotificationSnackbar
+import com.blipblipcode.library.DateTime
+import com.dsc.form_builder.ChoiceState
+import com.dsc.form_builder.FormState
+import com.dsc.form_builder.Validators
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomerDetailScreen(
+    viewModel: CustomerDetailViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit
+) {
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    val context = LocalContext.current
+    val isLoading by viewModel.isLoading.collectAsState(true)
+    val errorException by viewModel.errorException.collectAsState()
+
+    val isEditable by viewModel.isEditable.collectAsState()
+    val customer by viewModel.customer.collectAsState(Customer())
+
+    val formsState by remember {
+        derivedStateOf {
+            FormState(
+                listOf(
+                    ChoiceState(
+                        "region", customer.regionId,
+                        validators = listOf(
+                            Validators.Required(context.getString(R.string.error_required))
+                        ),
+                    ),
+                    ChoiceState(
+                        "rubro", customer.rubro.label(), validators = listOf(
+                            Validators.Required(context.getString(R.string.error_required))
+                        )
+                    ),
+                    ChoiceState(
+                        "commune",
+                        customer.commune,
+                        validators = listOf(Validators.Required(context.getString(R.string.error_required)))
+                    ),
+                    ChoiceState(
+                        "route", customer.routeId.orEmpty(), validators = listOf(
+                            Validators.Required(context.getString(R.string.error_required))
+                        )
+                    ),
+                    ChoiceState(
+                        name = "date",
+                        customer.birthDate,
+                        validators = listOf(
+                            Validators.Required(context.getString(R.string.error_required)),
+                            Validators.Custom(context.getString(R.string.error_required)){ value->
+                                try{
+                                    DateTime.fromString(value.toString())
+                                    true
+                                }catch (e:Throwable){
+                                    e.printStackTrace()
+                                 false
+                                }
+                            }
+                        )
+                    )
+                )
+            )
+        }
+    }
+
+    LaunchedEffect(errorException) {
+        errorException?.let {
+            snackbarHostState.showSnackbar(context.getString(it))
+        }
+    }
+    Box {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            onBackPressed.invoke()
+                        }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
+                    title = {
+                        AnimatedContent(isEditable) {
+                            if (it) {
+                                Text(
+                                    text = stringResource(R.string.edit_customer),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(R.string.customer_detail),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (!isEditable) {
+                            IconButton(onClick = {
+                                viewModel.onEditCustomer()
+                            }) {
+                                Icon(Icons.Filled.EditNote, contentDescription = null)
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+            },
+            snackbarHost = {
+                NotificationSnackbar(snackbarHostState)
+            },
+            floatingActionButton = {
+                AnimatedVisibility(isEditable) {
+                    FloatingActionButton(
+                        onClick = {
+                            if (formsState.validate()) {
+                                viewModel.onSavedCustomer(customer) {
+                                    onBackPressed.invoke()
+                                }
+                            }
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ) {
+                        Icon(Icons.Filled.Save, contentDescription = null)
+                    }
+                }
+
+            },
+            modifier = Modifier.imePadding()
+        ) { innerPadding ->
+            val statePicker = rememberDatePickerState()
+            var isOpened by remember {
+                mutableStateOf(false)
+            }
+
+
+            Column(
+                Modifier
+                    .padding(innerPadding)
+                    .padding(vertical = 16.dp, horizontal = 12.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                /*rut*/
+
+                RutTextField(customer.rut, isReadOnly = true, onRutChanged = {}) {
+                    if (isEditable){
+                        IconButton(onClick = {
+                            viewModel.syncTaxpayerData(customer.rut)
+                        }) {
+                            Icon(Icons.Filled.Sync, contentDescription = null)
+                        }
+                    }
+                }
+
+
+                val scrollState = rememberScrollState()
+                val rubros by viewModel.rubros.collectAsState(initial = listOf())
+                val routes by viewModel.routes.collectAsState(initial = listOf())
+
+                Column(Modifier.verticalScroll(scrollState)) {
+
+                    /*name*/
+                    CompanyTextField(
+                        value = customer.companyName,
+                        isReadOnly = !isEditable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        viewModel.onNameChanged(it)
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    val routesCustomer by remember {
+                        derivedStateOf {
+                            routes.find { it.uid == customer.routeId }
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val rubroState = formsState.getState<ChoiceState>("rubro")
+                        OptionsSelector(
+                            rubroState.initial,
+                            isReadOnly = !isEditable,
+                            modifier = Modifier.weight(0.6f),
+                            choices = rubros.map { FieldChoice(it, it.label()) },
+                            isError = rubroState.hasError,
+                            errorText = rubroState.errorMessage,
+                            label = {
+                                Text(
+                                    stringResource(R.string.category),
+                                    softWrap = false,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }) {
+                            viewModel.onRubrosChanged(it.data)
+                            rubroState.change(it.data.description)
+                        }
+                        val routeState = formsState.getState<ChoiceState>("route")
+                        OptionsSelector(
+                            routesCustomer?.name.orEmpty(),
+                            isReadOnly = !isEditable,
+                            modifier = Modifier.weight(0.4f),
+                            isError = routeState.hasError,
+                            errorText = routeState.errorMessage,
+                            choices = routes.map { FieldChoice(it, it.name) },
+                            label = {
+                                Text(stringResource(R.string.routes))
+                            }) {
+                            viewModel.onRouteChanged(it.data)
+                            routeState.change(it.data.name)
+                        }
+
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val birthDate by viewModel.birthDate.collectAsState()
+                        val dateFormsState = formsState.getState<ChoiceState>("date")
+                        LaunchedEffect(birthDate) {
+                            dateFormsState.change(birthDate.value)
+                        }
+                        BirthDateTextField(
+                            birthDate = birthDate,
+                            isReadOnly = !isEditable,
+                            onBirthdayChanged = { date ->
+                                viewModel.onBirthdayChanged(date)
+
+                            },
+                            modifier = Modifier.weight(0.6f)
+                        ) {
+                            IconButton(onClick = {
+                                isOpened = true
+                            }) {
+                                Icon(Icons.Filled.CalendarMonth, contentDescription = null)
+                            }
+                        }
+
+
+
+                        PhoneTextField(
+                            value = customer.phone,
+                            isReadOnly = !isEditable,
+                            modifier = Modifier.weight(0.4f)
+                        ) {
+                            viewModel.onPhoneChanged(it)
+                        }
+
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        val regions by viewModel.regions.collectAsState(listOf())
+                        val regionsCustomer by remember(customer) {
+                            derivedStateOf {
+                                regions.find { it.id == customer.regionId }
+                            }
+                        }
+                        val regionState = formsState.getState<ChoiceState>("region")
+                        OptionsSelector(
+                            regionsCustomer?.name.orEmpty(),
+                            isReadOnly = !isEditable,
+                            modifier = Modifier.weight(0.5f),
+                            isError = regionState.hasError,
+                            errorText = regionState.errorMessage,
+                            choices = regions.map { FieldChoice(it, it.name) },
+                            label = {
+                                Text(stringResource(R.string.region))
+                            }) {
+                            viewModel.onRegionChanged(it.data)
+                            regionState.change(it.data.name)
+
+                        }
+
+                        val communes by viewModel.communes.collectAsState()
+                        val customerState = formsState.getState<ChoiceState>("commune")
+                        OptionsSelector(
+                            customer.commune.removeAccents(),
+                            modifier = Modifier.weight(0.5f),
+                            isReadOnly = !isEditable,
+                            isError = customerState.hasError,
+                            errorText = customerState.errorMessage,
+                            choices = communes.map { FieldChoice(it, it.name) },
+                            label = {
+                                Text(stringResource(R.string.commune))
+                            }) {
+                            viewModel.onCommuneChanged(it.data)
+                            customerState.change(it.data.name)
+                        }
+                    }
+
+                    AddressTextField(
+                        value = customer.address,
+                        isReadOnly = !isEditable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        viewModel.onAddressChanged(it)
+                    }
+                    Spacer(Modifier.height(8.dp))
+
+                    customer.branches?.let { branches ->
+                        CarouselView(
+                            items = branches,
+                            label = stringResource(R.string.branches)
+                        ) { branch ->
+                            ItemHolderBranch(
+                                branch,
+                                modifier = Modifier.fillMaxWidth(),
+                                isReadOnly = !isEditable
+                            ) { b, c ->
+                                viewModel.onChangedBranch(b, c)
+                            }
+                        }
+                    }
+
+                    customer.activities?.let { activities ->
+                        CarouselView(
+                            items = activities,
+                            label = stringResource(R.string.activities)
+                        ) {
+                            ItemHolderActivity(it)
+                        }
+                    }
+                }
+
+                AnimatedVisibility(isOpened) {
+                    DatePickerDialog(
+                        onDismissRequest = { isOpened = false },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    isOpened = false
+                                    statePicker.selectedDateMillis?.let {
+                                        viewModel.onBirthdayChanged(it)
+                                    }
+
+                                }
+                            ) {
+                                Text(text = "OK")
+                            }
+                        },
+                        dismissButton = {
+                            Button(
+                                onClick = { isOpened = false }
+                            ) {
+                                Text(text = "Cancel")
+                            }
+                        },
+                        properties = DialogProperties(usePlatformDefaultWidth = true)
+                    ) {
+                        DatePicker(
+                            state = statePicker,
+                            title = null,
+                            showModeToggle = true
+                        )
+                    }
+                }
+
+            }
+        }
+        LoadingScreen(isLoading, Modifier.fillMaxSize()) {
+            Text(stringResource(R.string.generating_document))
+        }
+
+    }
+}
