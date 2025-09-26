@@ -124,6 +124,7 @@ fun CustomerDetailScreen(
                                     DateTime.fromString(value.toString())
                                     true
                                 }catch (e:Throwable){
+                                    e.printStackTrace()
                                  false
                                 }
                             }
