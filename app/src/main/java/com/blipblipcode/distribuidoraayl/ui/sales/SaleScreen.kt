@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.blipblipcode.distribuidoraayl.R
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocFormat
 import com.blipblipcode.distribuidoraayl.ui.sales.models.SaleUiState
@@ -32,9 +33,11 @@ fun SaleScreen(
     openDrawer: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isLetter by viewModel.isLetter.collectAsState()
     var showPayment by remember {
         mutableStateOf(false)
     }
+    val printer by viewModel.printerState.collectAsStateWithLifecycle()
     Box(Modifier.fillMaxSize()) {
         AnimatedContent(uiState) { ui ->
             when (ui) {
@@ -46,20 +49,35 @@ fun SaleScreen(
                 is SaleUiState.PreviewSale -> {
                     when (ui.doc.format) {
                         DocFormat.F80MM -> {
-                            Format50mmPreview(ui.doc, onGenerateDte = {
-                                showPayment = true
-                            }, onInsertNote = {
-                                //TODO implementar insertNOTE
-                            }) {
+                            Format50mmPreview(
+                                doc = ui.doc,
+                                printerState = printer,
+                                onPrinter = {
+                                    viewModel.onPrint(ui.doc, printer)
+                                },
+                                onGenerateDte = {
+                                    showPayment = true
+                                }, onInsertNote = {
+                                    //TODO implementar insertNOTE
+                                }) {
                                 viewModel.onUiChanged(SaleUiState.NewSale)
                             }
                         }
+
                         DocFormat.LETTER -> {
-                            PdfScreen(ui.doc.uri, onGenerateDte = {
-                                showPayment = true
-                            }, onInsertNote = {
-                                //TODO implementar insertNOTE
-                            }) {
+                            PdfScreen(
+                                uri = ui.doc.uri,
+                                printerSate = printer,
+                                onPrint = {
+                                    viewModel.onPrint(ui.doc, printer)
+                                },
+                                onGenerateDte = {
+                                    showPayment = true
+                                },
+                                onInsertNote = {
+                                    //TODO implementar insertNOTE
+                                },
+                            ) {
                                 viewModel.onUiChanged(SaleUiState.NewSale)
                             }
                         }
@@ -71,7 +89,7 @@ fun SaleScreen(
                             onDismiss = {
                                 showPayment = false
                             }, onConfirm = { pay ->
-                                viewModel.onGenerateDte(pay, ui.doc.sale)
+                                viewModel.onGenerateDte(pay, ui.doc.sale, isLetter = isLetter)
                                 showPayment = false
                             })
                     }
@@ -81,15 +99,28 @@ fun SaleScreen(
                 is SaleUiState.FinishSale -> {
                     when (ui.doc.format) {
                         DocFormat.F80MM -> {
-                            Format50mmSale(ui.doc) {
+                            Format50mmSale(
+                                printerState = printer,
+                                doc = ui.doc,
+                                onPrinter = {
+                                    viewModel.onPrint(ui.doc, printer)
+                                }
+                            ) {
                                 viewModel.onUiChanged(SaleUiState.NewSale)
                             }
                         }
 
                         DocFormat.LETTER -> {
-                            PdfScreen(ui.doc.uri, ui.doc.number) {
-                                viewModel.onUiChanged(SaleUiState.NewSale)
-                            }
+                            PdfScreen(
+                                uri = ui.doc.uri,
+                                printerSate = printer,
+                                onPrinter = {
+                                    viewModel.onPrint(ui.doc, printer)
+                                },
+                                onBack = {
+                                    viewModel.onUiChanged(SaleUiState.NewSale)
+                                }
+                            )
                         }
                     }
                 }

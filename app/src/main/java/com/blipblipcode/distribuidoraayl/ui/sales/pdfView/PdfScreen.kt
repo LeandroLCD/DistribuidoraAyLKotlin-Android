@@ -31,19 +31,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.blipblipcode.distribuidoraayl.R
+import com.blipblipcode.distribuidoraayl.domain.models.printState.PrinterState
 import com.blipblipcode.distribuidoraayl.ui.utils.shareFileByEmail
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.FabOption
 import com.blipblipcode.distribuidoraayl.ui.widgets.buttons.SemicircularFabMenu
-import com.blipblipcode.distribuidoraayl.ui.widgets.pdfViewer.PdfViewer
 import com.blipblipcode.distribuidoraayl.ui.widgets.loading.LoadingScreen
-import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.DocumentTopBar
-import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.PreViewTopBar
+import com.blipblipcode.distribuidoraayl.ui.widgets.pdfViewer.PdfViewer
+import com.blipblipcode.distribuidoraayl.ui.widgets.topBat.PdfViewTopBar
 import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PdfScreen(
     uri: Uri,
+    printerSate: PrinterState,
+    onPrint: () -> Unit,
     onGenerateDte: () -> Unit,
     onInsertNote: () -> Unit,
     onBack: () -> Unit
@@ -51,7 +53,11 @@ fun PdfScreen(
 
     val context = LocalContext.current
     Scaffold(topBar = {
-        PreViewTopBar(onBack)
+        PdfViewTopBar(
+            printerSate = printerSate,
+            print = {onPrint.invoke()},
+            onBackPressed = {onBack.invoke()}
+        )
     }) { innerPadding ->
         var isLoading by remember {
             mutableStateOf(Triple<Boolean, Int?, Int?>(false, null, null))
@@ -134,13 +140,18 @@ fun PdfScreen(
 @Composable
 fun PdfScreen(
     uri: Uri,
-    docNumber: Long,
+    printerSate: PrinterState,
+    onPrinter: () -> Unit,
     onBack: () -> Unit
 ) {
 
     val context = LocalContext.current
     Scaffold(topBar = {
-        DocumentTopBar(stringResource(R.string.document, docNumber.toString()), onBack)
+        PdfViewTopBar(
+            printerSate = printerSate,
+            print = {onPrinter.invoke()},
+            onBackPressed = {onBack.invoke()}
+        )
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {

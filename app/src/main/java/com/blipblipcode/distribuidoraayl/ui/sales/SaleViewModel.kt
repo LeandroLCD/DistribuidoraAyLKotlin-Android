@@ -1,5 +1,6 @@
 package com.blipblipcode.distribuidoraayl.ui.sales
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blipblipcode.distribuidoraayl.domain.models.customer.Activity
@@ -9,9 +10,11 @@ import com.blipblipcode.distribuidoraayl.domain.models.customer.Route
 import com.blipblipcode.distribuidoraayl.domain.models.onError
 import com.blipblipcode.distribuidoraayl.domain.models.onSuccess
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
+import com.blipblipcode.distribuidoraayl.domain.models.printState.PrinterState
 import com.blipblipcode.distribuidoraayl.domain.models.products.Category
 import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
+import com.blipblipcode.distribuidoraayl.domain.models.sales.DocumentElectronic
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem
@@ -22,6 +25,7 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.customer.IGetRoutesUseCa
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IGenerateInvoiceUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IGeneratePreviewUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.IGetEcommerceUseCase
+import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetCategoriesUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetProductUseCase
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IGetProductsUseCase
@@ -53,11 +57,17 @@ class SaleViewModel @Inject constructor(
     getEcommerceUseCase: dagger.Lazy<IGetEcommerceUseCase>,
     getCategoriesUseCase: dagger.Lazy<IGetCategoriesUseCase>,
     private val getProductUseCase: dagger.Lazy<IGetProductUseCase>,
+    private val printerUseCase: dagger.Lazy<IPrinterUseCase>,
     private val generatePreviewUseCase: dagger.Lazy<IGeneratePreviewUseCase>,
     private val generateInvoiceUseCase: dagger.Lazy<IGenerateInvoiceUseCase>
 ) : ViewModel() {
     /*Event*/
 
+    val printerState = printerUseCase.get().invoke().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000L),
+        PrinterState.Idle
+    )
     private val _uiState = MutableStateFlow<SaleUiState>(SaleUiState.NewSale)
     val uiState = _uiState.asStateFlow()
 
@@ -191,6 +201,24 @@ class SaleViewModel @Inject constructor(
 
     /*State*/
 
+    fun onPrint(doc: DocumentElectronic, printer: PrinterState) {
+        viewModelScope.launch {
+            when(printer){
+                PrinterState.Connected, PrinterState.Ready -> {
+                    _isLoading.tryEmit(true)
+                    printerUseCase.get().print(doc)
+                    _isLoading.tryEmit(false)
+                }
+                PrinterState.Disconnected, PrinterState.Idle  -> {
+                    _isLoading.tryEmit(true)
+                    printerUseCase.get().connect()
+                    _isLoading.tryEmit(false)
+                }
+                is PrinterState.Exception -> printerUseCase.get().connect()
+                else -> {}
+            }
+        }
+    }
 
     fun onDeleteProduct(uid: String) {
         card.update {
@@ -292,8 +320,8 @@ class SaleViewModel @Inject constructor(
 
     fun onAddProducts(selects: List<ProductSelected>) {
         clearProductSelected()
-        card.update {
-            val copy = it.toMutableMap()
+        card.update { card ->
+            val copy = card.toMutableMap()
             selects.forEach {
                 if (copy.containsKey(it.product.uid)) {
                     val old = copy[it.product.uid]
@@ -302,7 +330,6 @@ class SaleViewModel @Inject constructor(
                     copy[it.product.uid] = 1 to it.product.offer.isActive
                 }
             }
-
             copy.toMap()
         }
     }
@@ -323,6 +350,7 @@ class SaleViewModel @Inject constructor(
         total: Totals,
         isLetter: Boolean
     ) {
+        Log.d("SaleViewModel", "onSale: $isLetter")
         viewModelScope.launch {
             val sale = Sale(
                 date = date,
@@ -351,7 +379,7 @@ class SaleViewModel @Inject constructor(
             )
             generatePreviewUseCase.get().invoke(sale, isLetter).onError {
                 _errorException.tryEmit(it)
-            }.onSuccess {doc->
+            }.onSuccess { doc ->
                 onUiChanged(SaleUiState.PreviewSale(doc))
             }
 
@@ -364,10 +392,10 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun onGenerateDte(payment: Payment, sale: Sale, isLetter: Boolean = false) {
+    fun onGenerateDte(payment: Payment, sale: Sale, isLetter: Boolean) {
         viewModelScope.launch {
             _isLoading.tryEmit(true)
-            generateInvoiceUseCase.get().invoke(payment, sale).onError {
+            generateInvoiceUseCase.get().invoke(payment, sale, isLetter).onError {
                 _errorException.tryEmit(it)
             }.onSuccess {
                 clearSale()
@@ -397,6 +425,7 @@ class SaleViewModel @Inject constructor(
     }
 
     fun onLetterChanged(bool: Boolean) {
+        Log.d("SaleViewModel", "onLetterChanged: $bool")
         _isLetter.tryEmit(bool)
     }
 }

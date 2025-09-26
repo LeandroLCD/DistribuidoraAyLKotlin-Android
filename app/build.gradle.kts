@@ -12,7 +12,7 @@ plugins {
 
 android {
     namespace = "com.blipblipcode.distribuidoraayl"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.blipblipcode.distribuidoraayl"
@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.itext7.core)
 
     //print
+    implementation(libs.termalPrinter)
 
     //navigation
     implementation(libs.bundles.compose.navigation)

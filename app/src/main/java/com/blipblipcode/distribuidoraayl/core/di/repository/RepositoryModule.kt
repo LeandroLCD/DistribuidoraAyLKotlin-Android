@@ -1,9 +1,10 @@
-package com.blipblipcode.distribuidoraayl.core.di.repository
+package com.blipblipcode.distribuidoraayl.core.repository
 
 import com.blipblipcode.distribuidoraayl.data.repositiry.auth.AuthRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.customer.CustomerRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.of.OpenFacturaRepository
-import com.blipblipcode.distribuidoraayl.data.repositiry.pdf.PdfManagerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PdfManagerRepository
+import com.blipblipcode.distribuidoraayl.data.repositiry.files.PrinterRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.preferences.SystemPreferencesRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.product.ProductsRepository
 import com.blipblipcode.distribuidoraayl.data.repositiry.reportSale.ReportSaleRepository
@@ -13,6 +14,7 @@ import com.blipblipcode.distribuidoraayl.domain.useCase.customer.ICustomerReposi
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.preferences.ISystemPreferencesRepository
+import com.blipblipcode.distribuidoraayl.domain.useCase.printer.IPrinterRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.products.IProductsRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.reportSale.IReportSaleRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.worker.ISyncUpRepository
@@ -61,6 +63,12 @@ class RepositoryModule {
     @Provides
     fun providePdfManagerRepository(pdfManagerRepository: PdfManagerRepository): IPdfManagerRepository {
         return pdfManagerRepository
+    }
+
+    @Singleton
+    @Provides
+    fun providePrinterRepository(printerRepository: PrinterRepository): IPrinterRepository {
+        return printerRepository
     }
 
     @Singleton

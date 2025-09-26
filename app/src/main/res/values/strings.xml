@@ -107,4 +107,5 @@
     <string name="format_letter">Carta</string>
     <string name="format_ticket">80 mm</string>
     <string name="emission_date">FECHA DE EMISIÓN: %1$s</string>
+    <string name="title_activity_main2">MainActivity2</string>
 </resources>

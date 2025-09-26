@@ -29,6 +29,7 @@ import com.blipblipcode.library.model.FormatType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewSalesTopBar(date:DateTime,
+                   isLetter: Boolean,
                    onClickMenu: () -> Unit,
                    onDocumentChanged: (Boolean) -> Unit,
                    onClickDate: () -> Unit) {
@@ -64,14 +65,14 @@ fun NewSalesTopBar(date:DateTime,
                     onDismissRequest = { isVisible = false },
                 ) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.format_letter)) },
+                        text = { Text(stringResource(R.string.format_letter), color = if (isLetter) MaterialTheme.colorScheme.primary else Color.Black) },
                         onClick = {
-                            isVisible = false
-                            onDocumentChanged.invoke(false)
+                            isVisible = true
+                            onDocumentChanged.invoke(true)
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.format_ticket)) },
+                        text = { Text(stringResource(R.string.format_ticket), color = if (!isLetter) MaterialTheme.colorScheme.primary else Color.Black) },
                         onClick = {
                             isVisible = false
                             onDocumentChanged.invoke(false)
