@@ -1,7 +1,9 @@
 package com.blipblipcode.distribuidoraayl.data.mapper
 
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ClientReceiverEntity
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SalesItemEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ReportSaleEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SalesItemEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.TotalsEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ClientReceiverEntity
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.CodeDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.DteDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ElectronicInvoiceDto
@@ -11,17 +13,17 @@ import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.IdDocDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ItemDetailDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ReceiverDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.TotalsDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ClientReceiverDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ReportSaleDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.ResolutionTdo
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.SalesItemsDto
+import com.blipblipcode.distribuidoraayl.data.dto.reportSale.TotalsSaleDto
 import com.blipblipcode.distribuidoraayl.domain.models.preferences.ECommerce
 import com.blipblipcode.distribuidoraayl.domain.models.sales.ClientReceiver
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Payment
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.models.sales.SalesItem
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Totals
-import kotlin.collections.map
-import kotlin.math.roundToInt
-import kotlin.text.isNullOrBlank
-import kotlin.text.orEmpty
-import kotlin.text.take
 
 fun Sale.toElectronicInvoice(payment: Payment, isLetter: Boolean = true): ElectronicInvoiceDto {
     val pay = (payment is Payment.Cash).transform(1, 2)
@@ -88,12 +90,12 @@ fun ECommerce.toEmisor(): EmisorDto{
 }
 
 fun SalesItem.toDetailDto(): ItemDetailDto {
-    val roundedPrice = price
+     price
     return ItemDetailDto(
-        montoItem = roundedPrice * quantity,
+        montoItem = price * quantity,
         nmbItem = name,
         nroLinDet = index,
-        prcItem = roundedPrice,
+        prcItem = price,
         qtyItem = quantity,
         cdgItem = buildList {
             add(CodeDto("SKU", sku))
@@ -117,6 +119,17 @@ fun SalesItem.toEntity(saleId: Long): SalesItemEntity {
     )
 }
 
+fun Totals.toEntity(saleId: Long): TotalsEntity {
+    return TotalsEntity(
+        saleId = saleId,
+        netAmount = netAmount,
+        tax = tax,
+        taxAmount = taxAmount,
+        periodicAmount = periodicAmount,
+        total = total
+    )
+}
+
 fun ClientReceiver.toEntity(): ClientReceiverEntity{
     return ClientReceiverEntity(
         rut = rut,
@@ -124,6 +137,53 @@ fun ClientReceiver.toEntity(): ClientReceiverEntity{
         address = address,
         commune = commune,
         turn = turn
+    )
+
+}
+
+fun ReportSaleEntity.toDto(): ReportSaleDto{
+    return ReportSaleDto(
+        uid = sale.uid.orEmpty(),
+        number = sale.number,
+        date = sale.date,
+        token = sale.token,
+        resolution = sale.resolution?.let { ResolutionTdo(it.number, it.date) },
+        timbre = sale.timbre,
+        receiver = client.toDto(),
+        dteType = sale.dteType,
+        items = items.map { it.toDto() },
+        totals = totals.toDto()
+    )
+
+}
+fun TotalsEntity.toDto(): TotalsSaleDto{
+    return TotalsSaleDto(
+        tax = tax,
+        netAmount = netAmount,
+        taxAmount = taxAmount,
+        periodicAmount = periodicAmount,
+        total = total
+    )
+}
+fun ClientReceiverEntity.toDto(): ClientReceiverDto{
+    return ClientReceiverDto(
+        rut = rut,
+        name = name,
+        address = address,
+        commune = commune,
+        turn = turn
+    )
+}
+
+fun SalesItemEntity.toDto(): SalesItemsDto {
+    return SalesItemsDto(
+        index = index,
+        sku = sku,
+        barCode = barCode,
+        name = name,
+        description = description,
+        price = price,
+        quantity = quantity
     )
 
 }

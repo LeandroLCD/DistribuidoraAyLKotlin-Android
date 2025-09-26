@@ -135,3 +135,7 @@ fun Double.toCurrencyFormat(delimiter: Char = ' ', minFractionDigits:Int = 0, ma
             replace(symbol, "$symbol$delimiter")
         }
 }
+fun Int.toCurrency(): String {
+    val format = NumberFormat.getInstance()
+    return "${format.format(this)} $"
+}

@@ -1,8 +1,6 @@
 package com.blipblipcode.distribuidoraayl.data.repositiry.product
 
 import android.content.Context
-import android.util.Log
-import com.blipblipcode.distribuidoraayl.core.local.entities.product.ProductEntity
 import com.blipblipcode.distribuidoraayl.core.local.room.dao.ProductDao
 import com.blipblipcode.distribuidoraayl.data.dto.products.CategoryDto
 import com.blipblipcode.distribuidoraayl.data.dto.products.ProductBrandsDto
@@ -21,10 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -35,6 +30,7 @@ class ProductsRepository @Inject constructor(
     private val remoteMediator: ProductRemoteMediator,
     private val productDao: ProductDao
 ):BaseFireStoreRepository(dispatcher, context, fireStore), IProductsRepository {
+
     companion object{
         const val CATALOGUE = "catalogue_products"
         const val CATEGORIES = "categories"
@@ -95,18 +91,11 @@ class ProductsRepository @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getProducts(): Flow<List<Product>> {
 
-        Log.d("ProductRemoteMediator", "onFlow")
         return productDao.getProducts()
             .remoteMediator(remoteMediator)
-            .flatMapConcat { listProductEntity ->
-                mapToDomain(listProductEntity)
+            .map { listProductEntity ->
+                listProductEntity.map { it.mapToDomain() }
             }
-    }
-
-    private fun mapToDomain(listProductEntity: List<ProductEntity>): Flow<List<Product>> = flow {
-        emit(
-            listProductEntity.map { it.mapToDomain() }
-        )
     }
     
     override fun getCategoryList(): Flow<List<Category>> {

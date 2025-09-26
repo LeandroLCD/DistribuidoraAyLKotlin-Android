@@ -7,6 +7,7 @@ import com.blipblipcode.distribuidoraayl.domain.models.products.Product
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
+@Suppress("unused")
 data class ProductDto(
     @DocumentId
     var uid: String,

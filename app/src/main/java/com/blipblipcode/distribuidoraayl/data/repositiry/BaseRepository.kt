@@ -1,7 +1,7 @@
 package com.blipblipcode.distribuidoraayl.data.repositiry
 
 import android.content.Context
-import com.blipblipcode.distribuidoraayl.core.utils.isNetworkAvailable
+import com.blipblipcode.distribuidoraayl.core.di.utils.isNetworkAvailable
 import com.blipblipcode.distribuidoraayl.data.dto.of.error.ErrorRootDto
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.throwable.BackendErrorException
@@ -9,6 +9,7 @@ import com.blipblipcode.distribuidoraayl.domain.throwable.NetworkException
 import com.blipblipcode.distribuidoraayl.domain.throwable.PasswordIsNotValidException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDeletedException
 import com.blipblipcode.distribuidoraayl.domain.throwable.UserDisabledException
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -64,6 +65,9 @@ open class BaseRepository(
                 } else {
                     throwable
                 }
+            }
+            is FirebaseNetworkException ->{
+                NetworkException()
             }
 
             is FirebaseAuthUserCollisionException -> throwable

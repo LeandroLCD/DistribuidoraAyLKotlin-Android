@@ -59,6 +59,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -553,9 +554,11 @@ fun ProductCard(product: ProductQuantity, onDelete: () -> Unit) {
                         .width(32.dp)
 
                         .onFocusChanged {
-                            val new = value.filter { it.isDigit() }.toIntOrNull() ?: 1
-                            value = new.toString()
-                            product.onChangedQuantity(new)
+                            if (!it.isFocused) {
+                                val new = value.filter { it.isDigit() }.toIntOrNull() ?: 1
+                                value = new.toString()
+                                product.onChangedQuantity(new)
+                            }
                         },
                     maxLines = 1,
                     value = value,

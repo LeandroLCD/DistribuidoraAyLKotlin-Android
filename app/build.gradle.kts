@@ -43,7 +43,12 @@ android {
     buildFeatures {
         compose = true
     }
-    packagingOptions.resources.excludes.addAll(listOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/gradle/incremental.annotation.processors") )
+    packagingOptions.resources.excludes.addAll(
+        listOf(
+            "/META-INF/{AL2.0,LGPL2.1}",
+            "META-INF/gradle/incremental.annotation.processors"
+        )
+    )
 
 }
 
@@ -92,22 +97,31 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.interceptor)
 
-    //fireBase
+    //firebase
     implementation(platform(libs.firebase.boom))
     implementation(libs.bundles.firebase)
 
     //playService
     implementation(libs.bundles.play.service)
 
-    //Room
+    //room
     implementation(libs.bundles.room)
     annotationProcessor(libs.android.room.compiler)
     ksp(libs.android.room.compiler)
 
+    //paging
+    implementation(libs.bundles.paging)
 
     //hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+
+    //Startup
+    implementation(libs.androidx.startup)
+
+    //workManager
+    implementation(libs.bundles.work.manager)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,8 @@
 package com.blipblipcode.distribuidoraayl.ui.customer.models
 
 import androidx.lifecycle.ViewModel
+import com.blipblipcode.distribuidoraayl.domain.models.filters.DataFilter
+import com.blipblipcode.distribuidoraayl.domain.models.filters.TypeFilter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

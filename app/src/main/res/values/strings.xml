@@ -83,6 +83,10 @@
     <string name="generating_document">Generando Documento...</string>
     <string name="document">Documento %1$s</string>
     <string name="share">Compartir PDF</string>
+    <string name="sales">Ventas</string>
+    <string name="products">Productos</string>
+    <string name="reports">Reportes</string>
+    <string name="drawer_text_reports">Reporte de Ventas</string>
     <string name="r_u_t">R.U.T.:%1$s</string>
     <string name="factura">Factura</string>
     <string name="credit_note">NOTA DE CREDITO</string>

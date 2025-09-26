@@ -2,15 +2,15 @@ package com.blipblipcode.distribuidoraayl.data.repositiry.of
 
 import android.content.Context
 import androidx.room.withTransaction
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ResolutionEntity
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SaleDataEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ResolutionEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SaleDataEntity
 import com.blipblipcode.distribuidoraayl.core.local.room.DataBaseApp
 import com.blipblipcode.distribuidoraayl.core.network.IOpenFacturaApi
 import com.blipblipcode.distribuidoraayl.data.dto.of.EmissionResponseDto
 import com.blipblipcode.distribuidoraayl.data.mapper.toElectronicInvoice
 import com.blipblipcode.distribuidoraayl.data.mapper.toEntity
 import com.blipblipcode.distribuidoraayl.data.repositiry.BaseRepository
-import com.blipblipcode.distribuidoraayl.data.repositiry.product.EventManager
+import com.blipblipcode.distribuidoraayl.data.repositiry.EventManager
 import com.blipblipcode.distribuidoraayl.domain.models.ResultType
 import com.blipblipcode.distribuidoraayl.domain.models.of.Taxpayer
 import com.blipblipcode.distribuidoraayl.domain.models.sales.DocFormat
@@ -21,7 +21,6 @@ import com.blipblipcode.distribuidoraayl.domain.models.sales.Resolution
 import com.blipblipcode.distribuidoraayl.domain.models.sales.Sale
 import com.blipblipcode.distribuidoraayl.domain.useCase.openFactura.IOpenFacturaRepository
 import com.blipblipcode.distribuidoraayl.domain.useCase.pdfManager.IPdfManagerRepository
-import com.blipblipcode.library.model.FormatType
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
@@ -49,7 +48,7 @@ class OpenFacturaRepository @Inject constructor(
             val response = openFacturaApi.generateSale(dto)
 
             eventManager.addCall {
-                saveReportSAle(sale, response)
+                saveReportSale(sale, DteType.INVOICE, response)
             }
             val uri = if (isLetter) {
                 pdfManager.generateDteLetter(
@@ -80,14 +79,20 @@ class OpenFacturaRepository @Inject constructor(
                 sale = sale,
                 payment = payment
             )
+
         }
     }
 
-    private suspend fun saveReportSAle(sale: Sale, response: EmissionResponseDto) {
+    private suspend fun saveReportSale(
+        sale: Sale,
+        dteType: DteType,
+        response: EmissionResponseDto
+    ){
         val saleEntity = SaleDataEntity(
             number = response.number,
+            dteType = dteType,
             clientRut = sale.receiver.rut,
-            date = sale.date.format(FormatType.Large('-')),
+            date = sale.date.toMillis(),
             token = response.token,
             resolution = ResolutionEntity(
                 date = response.resolution.date,
@@ -97,12 +102,13 @@ class OpenFacturaRepository @Inject constructor(
         )
         dataBaseApp.apply {
             withTransaction {
-                reportSaleDao().insertClient(sale.receiver.toEntity())
-                val saleId = reportSaleDao().insertSale(saleEntity)
+                reportSaleDao().insert(sale.receiver.toEntity())
+                val saleId = reportSaleDao().insert(saleEntity)
                 val items = sale.items.map {
                     it.toEntity(saleId)
                 }
-                reportSaleDao().insertSaleItems(items)
+                reportSaleDao().insert(items)
+                reportSaleDao().insert(sale.totals.toEntity(saleId))
             }
         }
     }

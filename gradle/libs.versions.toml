@@ -39,6 +39,11 @@ barcodeVersion = "1.0.3"
 storeVersion = "1.1.7"
 itext7Core = "9.2.0"
 termalPrinterVersion = "3.4.0"
+hiltWork = "1.2.0"
+startupAndroid = "1.2.0"
+work = "2.10.1"
+pagingCompose = "3.3.6"
+pagingRuntimeKtx = "3.3.6"
 
 [libraries]
 
@@ -103,6 +108,17 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 
+#HiltWork
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltWork" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltWork" }
+
+# Startup
+androidx-startup= { module = "androidx.startup:startup-runtime", version.ref = "startupAndroid" }
+
+# WorkManager
+androidx-work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+
 #Camera
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCamera2" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
@@ -110,10 +126,17 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
 androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraCamera2" }
 
+#Paging
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCompose"}
+androidx-paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "pagingCompose" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+
 #Room
 android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 android-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+android-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 #firebase
 firebase-boom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
@@ -141,11 +164,13 @@ androidx-uiMaterial = ["androidx-material3", "androidx-icons-core", "androidx-ic
 firebase = ["firebase-crashlytics", "guava", "firebase-auth", "firebase-firestore", "firebase-remoteConfig"]
 compose-navigation = ["navigation-compose", "navigation-ui-ktx", "kotlinx-serialization-json"]
 network = ["retrofit", "converter-gson", "okhttp3", "okhttp3-interceptor"]
-room = ["android-room-runtime", "android-room-ktx"]
+room = ["android-room-runtime", "android-room-ktx", "android-room-paging"]
+paging = ["androidx-paging-common", "androidx-paging-common-ktx", "androidx-paging-compose", "androidx-paging-runtime-ktx"]
 hilt = ["androidx-hilt-navigation-compose", "hilt-android"]
 cameraX = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-extensions"]
 play-service = ["googleid", "play-service"]
 dateTime = ["dateTime", "threetenabp"]
+work-manager = ["androidx-hilt-common", "androidx-hilt-work", "androidx-work"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -170,7 +170,7 @@ class SaleViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000L), emptyList())
 
-    val totals = productsInCard.combine(ecommerce) { products, ecommerce ->
+    val totals = combine(productsInCard, ecommerce) { products, ecommerce ->
         val iva = ecommerce?.iva ?: 0.0
         Totals(
             netAmount = products.sumOf { it.totalPrice.value },
@@ -371,7 +371,7 @@ class SaleViewModel @Inject constructor(
                         barCode = it.product.barCode,
                         name = it.product.name,
                         description = it.product.description,
-                        price = it.totalPrice.value,
+                        price = it.netPrice(),
                         quantity = it.quantity
                     )
                 },

@@ -13,7 +13,6 @@ class ProductQuantity(
     val onChangedOffer: (Boolean) -> Unit,
     val onChangedQuantity: (Int) -> Unit
 ){
-
     val totalPrice =  derivedStateOf {
         val netPrice = if (isOffer && product.offer.percentage > 0f) {
             val discount = product.grossPrice * (product.offer.percentage / 100f)
@@ -23,5 +22,12 @@ class ProductQuantity(
         }
         (netPrice * quantity).roundToInt()
     }
+
+    fun netPrice() = if (isOffer && product.offer.percentage > 0f) {
+        val discount = product.grossPrice * (product.offer.percentage / 100f)
+        product.grossPrice - discount
+    } else {
+        product.grossPrice
+    }.roundToInt()
 
 }
