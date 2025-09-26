@@ -13,7 +13,7 @@ class ReportSaleDto(
     var uid: String,
     @get:PropertyName("number")
     @set:PropertyName("number")
-    var number: Int,
+    var number: Long,
     @get:PropertyName("date")
     @set:PropertyName("date")
     var date: Long,

@@ -11,7 +11,7 @@ data class SaleDataEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val uid: String? = null,
-    val number: Int,
+    val number: Long,
     val clientRut: String,
     val date: Long,
     val token: String?,

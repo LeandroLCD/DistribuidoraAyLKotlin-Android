@@ -2,8 +2,8 @@ package com.blipblipcode.distribuidoraayl.data.repositiry.of
 
 import android.content.Context
 import androidx.room.withTransaction
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.ResolutionEntity
-import com.blipblipcode.distribuidoraayl.core.local.entities.openFactura.reportSale.SaleDataEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ResolutionEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SaleDataEntity
 import com.blipblipcode.distribuidoraayl.core.local.room.DataBaseApp
 import com.blipblipcode.distribuidoraayl.core.network.IOpenFacturaApi
 import com.blipblipcode.distribuidoraayl.data.dto.of.EmissionResponseDto
@@ -70,7 +70,7 @@ class OpenFacturaRepository @Inject constructor(
             }
             DocumentElectronic(
                 uri = uri,
-                number = response.number.toLong(),
+                number = response.number,
                 docType = DteType.INVOICE,
                 format = if(isLetter) DocFormat.LETTER else DocFormat.F80MM,
                 token = response.token,
@@ -80,7 +80,6 @@ class OpenFacturaRepository @Inject constructor(
                 payment = payment
             )
 
-            DocumentElectronic(uri = uri, number = response.number)
         }
     }
 

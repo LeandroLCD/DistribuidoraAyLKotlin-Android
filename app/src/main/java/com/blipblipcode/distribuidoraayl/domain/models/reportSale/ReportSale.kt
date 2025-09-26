@@ -10,7 +10,7 @@ import com.blipblipcode.library.DateTime
 data class ReportSale(
     val id: Long,
     val uid: String?,
-    val number: Int,
+    val number: Long,
     val dteType: DteType,
     val client: ClientReceiver,
     val date: DateTime,
