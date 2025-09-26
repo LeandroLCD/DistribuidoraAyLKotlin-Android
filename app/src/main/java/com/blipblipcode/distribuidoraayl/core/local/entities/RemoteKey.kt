@@ -12,5 +12,4 @@ data class RemoteKey (
     val key:String,
     val date: Long,
     val offset: String
-
 )

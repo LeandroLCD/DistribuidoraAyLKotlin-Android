@@ -1,9 +1,9 @@
 package com.blipblipcode.distribuidoraayl.data.mapper
 
-import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ClientReceiverEntity
 import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ReportSaleEntity
 import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.SalesItemEntity
 import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.TotalsEntity
+import com.blipblipcode.distribuidoraayl.core.local.entities.reportSale.ClientReceiverEntity
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.CodeDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.DteDto
 import com.blipblipcode.distribuidoraayl.data.dto.of.dte33.ElectronicInvoiceDto
