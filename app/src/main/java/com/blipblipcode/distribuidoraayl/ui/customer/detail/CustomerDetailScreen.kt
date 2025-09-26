@@ -443,7 +443,7 @@ fun CustomerDetailScreen(
             }
         }
         LoadingScreen(isLoading, Modifier.fillMaxSize()) {
-            Text(stringResource(R.string.gnerating_document))
+            Text(stringResource(R.string.generating_document))
         }
 
     }

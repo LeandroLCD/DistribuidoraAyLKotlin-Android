@@ -119,6 +119,7 @@ fun NewSaleScreen(
     var showProducts by remember {
         mutableStateOf(false)
     }
+    val isLetter by viewModel.isLetter.collectAsState()
 
     val scanBarcode =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { onResult ->
@@ -138,9 +139,13 @@ fun NewSaleScreen(
 
     Scaffold(
         topBar = {
-            NewSalesTopBar(date, onClickMenu = {
-                openDrawer.invoke()
-            }) {
+            NewSalesTopBar(
+                date, onClickMenu = {
+                    openDrawer.invoke()
+                },
+                onDocumentChanged = {
+                    viewModel.onLetterChanged(it)
+                }) {
                 isVisibleDatePick = true
             }
         }
@@ -384,8 +389,9 @@ fun NewSaleScreen(
                     }
 
                     Surface(
+                        enabled = customer != null && eCommerce != null,
                         onClick = {
-                            if(customer != null && eCommerce != null){
+                            if (customer != null && eCommerce != null) {
 
                                 viewModel.onSale(
                                     customer = customer!!,
@@ -393,7 +399,10 @@ fun NewSaleScreen(
                                     branch = branchSelected,
                                     date = date,
                                     eCommerce = eCommerce!!,
-                                    totals) }
+                                    isLetter = isLetter,
+                                    total = totals
+                                )
+                            }
                         },
                         shape = FloatingActionButtonDefaults.smallShape,
                         modifier = Modifier
@@ -479,7 +488,7 @@ fun NewSaleScreen(
         val categories by viewModel.categories.collectAsState()
         val search by viewModel.searchProduct.collectAsState()
 
-        if(showProducts) {
+        if (showProducts) {
             ProductListDialog(
                 products = products,
                 categories = categories,
@@ -665,7 +674,8 @@ fun SearchProducts(
             value = search,
             label = R.string.search,
             trailingIcon = trailingIcon,
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
                 .onGloballyPositioned { layoutCoordinates ->
                     rowSize = layoutCoordinates.size.toSize()
                 },

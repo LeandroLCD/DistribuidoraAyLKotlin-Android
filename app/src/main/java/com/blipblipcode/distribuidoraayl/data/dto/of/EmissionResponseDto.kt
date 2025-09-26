@@ -6,7 +6,7 @@ data class EmissionResponseDto (
     @SerializedName("TOKEN")
     val token: String,
     @SerializedName("FOLIO")
-    val number: Int,
+    val number: Long,
     @SerializedName("RESOLUCION")
     val resolution: ResolutionDto,
     @SerializedName("TIMBRE")

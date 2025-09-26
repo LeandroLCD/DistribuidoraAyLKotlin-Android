@@ -386,7 +386,7 @@ fun AddCustomerScreen(
             isLoading,
             Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f))
         ) {
-            Text(stringResource(R.string.gnerating_document))
+            Text(stringResource(R.string.generating_document))
         }
 
     }

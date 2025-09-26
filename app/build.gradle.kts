@@ -74,6 +74,8 @@ dependencies {
     //pdf
     implementation(libs.itext7.core)
 
+    //print
+
     //navigation
     implementation(libs.bundles.compose.navigation)
 
