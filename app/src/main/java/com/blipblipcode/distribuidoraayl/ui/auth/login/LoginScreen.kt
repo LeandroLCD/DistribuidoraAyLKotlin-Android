@@ -180,7 +180,7 @@ fun LoginScreen(
 @Composable
 fun Login(
     viewModel: LoginViewModel,
-    modifier: Modifier.Companion,
+    modifier: Modifier,
     navigateTo: () -> Unit,
     onCompleteLogin: () -> Unit,
     onRecoveryPassword: () -> Unit
